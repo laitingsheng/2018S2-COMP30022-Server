@@ -1,4 +1,4 @@
-package comp30022.server;
+package com.example.COMP30022ServerEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ServerApplicationTests {
+public class Comp30022ServerEngineApplicationTests {
 
 	@Test
 	public void contextLoads() {
