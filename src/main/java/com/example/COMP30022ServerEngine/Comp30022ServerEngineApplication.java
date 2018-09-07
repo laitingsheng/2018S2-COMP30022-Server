@@ -13,6 +13,6 @@ public class Comp30022ServerEngineApplication {
 
 	@GetMapping("/")
     public String hello() {
-            return "Hello Spring Boot!";
+            return "Guys the server for GUGUGU is now running";
     }
 }
