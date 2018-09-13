@@ -1,6 +1,7 @@
 package com.example.COMP30022ServerEngine;
 
 
+import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsRoute;
 import org.springframework.boot.SpringApplication;
@@ -46,15 +47,14 @@ public class Comp30022ServerEngineApplication {
         "origins":[A,B,C,D,E]
         "destinations":[A,B,C,D,E]
      */
-    @RequestMapping(value = "/route", method = RequestMethod.POST,
-            consumes = "application/json", produces = "application/json")
-    public ResponseEntity routePlanning(String[] origins, String[] destinations) {
+    @RequestMapping(value = "/route", method = RequestMethod.POST)
+    public ResponseEntity routePlanning(@RequestBody RoutePair pairs) {
         LOGGER.log(Level.INFO, "hitting POST");
 
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
-            DirectionsRoute[] route = planner.getDirections(origins, destinations);
-            return ResponseEntity.ok(route.toString());
+//            DirectionsRoute[] route = planner.getDirections(origins, destinations);
+            return ResponseEntity.ok(pairs);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Origins and Destinations Invalid");
         }
