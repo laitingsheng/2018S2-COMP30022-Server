@@ -53,16 +53,21 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--Google Maps Service Java Client-->
 		<dependency>
 			<groupId>com.google.maps</groupId>
 			<artifactId>google-maps-services</artifactId>
 			<version>0.2.7</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.slf4j</groupId>-->
-			<!--<artifactId>slf4j-nop</artifactId>-->
-			<!--<version>1.7.25</version>-->
-		<!--</dependency>-->
+
+
+		<!--Firebase stuff-->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.4.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

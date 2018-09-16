@@ -26,10 +26,14 @@ public class Comp30022ServerEngineApplication {
 
     private static final Logger LOGGER = Logger.getLogger(Comp30022ServerEngineApplication.class.getName());
 
+    //Maps API initialisation
     private GeoApiContext geoApiContext = new GeoApiContext.Builder()
             .apiKey(GOOGLEMAPAPIKEY)
             .build();
+    //Firebase Admin Initialisation
 
+
+    //Server start program
     public static void main(String[] args) {
         SpringApplication.run(Comp30022ServerEngineApplication.class, args);
     }
@@ -55,9 +59,6 @@ public class Comp30022ServerEngineApplication {
      */
     @RequestMapping(value = "/route", method = RequestMethod.POST)
     public DirectionsResult routePlanning(@RequestBody RoutePair pairs) {
-        LOGGER.log(Level.INFO, "hitting POST");
-        LOGGER.log(Level.INFO, Arrays.toString(pairs.origins));
-        LOGGER.log(Level.INFO, Arrays.toString(pairs.destinations));
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
             DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
