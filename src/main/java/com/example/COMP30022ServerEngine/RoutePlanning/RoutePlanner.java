@@ -17,7 +17,7 @@ public class RoutePlanner {
         this.geoApiContext = geoApiContext;
     }
 
-    public DirectionsRoute[] getDirections (String[] origins, String[] destinations)throws Exception{
+    public DirectionsResult getDirections (String[] origins, String[] destinations)throws Exception{
         String[] wayPoints = combineWayPoints(origins, destinations);
 
         DirectionsResult result =
@@ -27,7 +27,7 @@ public class RoutePlanner {
                 .waypoints(wayPoints)
                 .optimizeWaypoints(true)
                 .await();
-        return result.routes;
+        return result;
     }
 
     private String[] combineWayPoints(String[] origins, String[] destinations){

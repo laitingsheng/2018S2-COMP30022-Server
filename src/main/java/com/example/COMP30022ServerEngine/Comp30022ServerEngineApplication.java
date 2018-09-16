@@ -3,6 +3,7 @@ package com.example.COMP30022ServerEngine;
 
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.google.maps.GeoApiContext;
+import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,8 @@ import static com.example.COMP30022ServerEngine.Constant.GOOGLEMAPAPIKEY;
 
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
 
+import javax.xml.ws.Response;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,21 +46,38 @@ public class Comp30022ServerEngineApplication {
         return number1+number2;
     }
 
+
     /*
+       {
         "origins":[A,B,C,D,E]
         "destinations":[A,B,C,D,E]
+       }
      */
     @RequestMapping(value = "/route", method = RequestMethod.POST)
-    public ResponseEntity routePlanning(@RequestBody RoutePair pairs) {
+    public DirectionsResult routePlanning(@RequestBody RoutePair pairs) {
         LOGGER.log(Level.INFO, "hitting POST");
-
+        LOGGER.log(Level.INFO, Arrays.toString(pairs.origins));
+        LOGGER.log(Level.INFO, Arrays.toString(pairs.destinations));
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
-//            DirectionsRoute[] route = planner.getDirections(origins, destinations);
-            return ResponseEntity.ok(pairs);
+            DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
+            return result;
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Origins and Destinations Invalid");
+            LOGGER.log(Level.WARNING, e.toString(), e);
+            return null;
         }
+    }
+
+    @RequestMapping(value = "/grouping", method = RequestMethod.POST)
+    public ResponseEntity grouping(String user_id){
+        /*
+            get this user's location
+
+            groupID = GroupUsers
+
+            return the groupID
+         */
+        return ResponseEntity.badRequest().body("Not Yet implemented");
     }
 
 }
