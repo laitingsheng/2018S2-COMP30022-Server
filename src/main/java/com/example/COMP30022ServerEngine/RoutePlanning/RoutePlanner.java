@@ -1,6 +1,7 @@
 package com.example.COMP30022ServerEngine.RoutePlanning;
 
 
+import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
@@ -9,10 +10,13 @@ import com.google.maps.model.DirectionsRoute;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RoutePlanner {
 
     private GeoApiContext geoApiContext;
+    private static final Logger LOGGER = Logger.getLogger(RoutePlanner.class.getName());
+
     public RoutePlanner(GeoApiContext geoApiContext){
         this.geoApiContext = geoApiContext;
     }
