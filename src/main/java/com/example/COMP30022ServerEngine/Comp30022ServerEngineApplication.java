@@ -1,10 +1,10 @@
 package com.example.COMP30022ServerEngine;
 
 
+import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
+import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import org.springframework.boot.SpringApplication;
@@ -12,16 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.COMP30022ServerEngine.Constant.GOOGLEMAPAPIKEY;
-import static com.example.COMP30022ServerEngine.Constant.FIREBASEADMINKEYPATH;
-
-import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
-
-import java.io.FileInputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.example.COMP30022ServerEngine.Constant.GOOGLEMAPAPIKEY;
 
 
 @SpringBootApplication
@@ -35,15 +29,18 @@ public class Comp30022ServerEngineApplication {
             .apiKey(GOOGLEMAPAPIKEY)
             .build();
 
+    //Firebase DB initialization
+    private static FirebaseDb db = new FirebaseDb();
+
+
     //Server start program
     public static void main(String[] args) {
-        LOGGER.log(Level.INFO, FIREBASEADMINKEYPATH);
+//        LOGGER.log(Level.INFO, FIREBASEADMINKEYPATH);
         SpringApplication.run(Comp30022ServerEngineApplication.class, args);
     }
 
     @GetMapping("/")
     public String hello() {
-
         return "Guys the server for GUGUGU is now running";
     }
 
@@ -57,12 +54,21 @@ public class Comp30022ServerEngineApplication {
     public DirectionsResult routePlanning(@RequestBody RoutePair pairs) {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
+            int routeHashKey = RouteHash.hashOriginsDestinations(pairs.origins, pairs.destinations);
             DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
+            db.updateRouteHashResult(routeHashKey, result);
             return result;
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return null;
         }
+    }
+
+    @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
+
+    public String searchGroupId(String userId, String destination) {
+
+        return "Not yet implemented";
     }
 
     @RequestMapping(value = "/grouping", method = RequestMethod.POST)
