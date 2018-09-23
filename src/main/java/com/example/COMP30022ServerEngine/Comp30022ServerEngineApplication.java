@@ -1,10 +1,12 @@
 package com.example.COMP30022ServerEngine;
 
 
+import ch.hsr.geohash.GeoHash;
 import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
 import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
+import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -89,9 +91,9 @@ public class Comp30022ServerEngineApplication {
     }
 
     @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
-
     public String searchGroupId(String userId, String destination) {
-
+        GeoPoint testCoordinate = new GeoPoint(-37.826934, 144.985326);
+        GeoHash geohash = GeoHash.withCharacterPrecision(testCoordinate.getLatitude(), testCoordinate.getLongitude(), 12);
         return "Not yet implemented";
     }
 

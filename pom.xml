@@ -75,6 +75,14 @@
             <version>6.4.0</version>
         </dependency>
 
+        <!--GeoHashing for grouping algorithm-->
+        <dependency>
+            <groupId>ch.hsr</groupId>
+            <artifactId>geohash</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
+
         <!--Util -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
