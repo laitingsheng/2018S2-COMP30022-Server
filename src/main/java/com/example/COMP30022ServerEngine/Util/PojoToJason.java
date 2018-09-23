@@ -9,13 +9,14 @@ import java.util.logging.Logger;
 
 public class PojoToJason {
     private static final Logger LOGGER = Logger.getLogger(PojoToJason.class.getName());
-    public static String convert(Object ob){
+
+    public static String convert(Object ob) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        try{
+        try {
             String json = mapper.writeValueAsString(ob);
             return json;
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return null;
         }

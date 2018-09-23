@@ -1,14 +1,14 @@
 package com.example.COMP30022ServerEngine.FirebaseDB;
 
-import com.example.COMP30022ServerEngine.Util.PojoToJason;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.maps.model.DirectionsResult;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -56,13 +56,13 @@ public class FirebaseDb {
     function relates to route result
      */
 
-    public String getRouteResult(int hashKey){
+    public String getRouteResult(int hashKey) {
         db = FirestoreClient.getFirestore();
 
         DocumentReference docRef = db.collection(ROUTEHASHDB).document(Integer.toString(hashKey));
         ApiFuture<DocumentSnapshot> future = docRef.get();
 
-        try{
+        try {
             DocumentSnapshot document = future.get();
             if (document.exists()) {
                 //get route result as string
@@ -72,7 +72,7 @@ public class FirebaseDb {
             } else {
                 return null;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return null;
         }
@@ -87,21 +87,21 @@ public class FirebaseDb {
         ApiFuture<WriteResult> future = db.collection(ROUTEHASHDB).document(Integer.toString(hashKey)).set(docData);
     }
 
-    public boolean routeResultInDb(int hashKey){
+    public boolean routeResultInDb(int hashKey) {
         db = FirestoreClient.getFirestore();
 
         DocumentReference docRef = db.collection(ROUTEHASHDB).document(Integer.toString(hashKey));
 
         ApiFuture<DocumentSnapshot> future = docRef.get();
 
-        try{
+        try {
             DocumentSnapshot document = future.get();
             if (document.exists()) {
                 return true;
             } else {
                 return false;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return false;
         }
