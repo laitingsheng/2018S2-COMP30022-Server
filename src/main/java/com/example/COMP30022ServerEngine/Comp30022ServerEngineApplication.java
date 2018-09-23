@@ -92,9 +92,24 @@ public class Comp30022ServerEngineApplication {
 
     @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
     public String searchGroupId(String userId, String destination) {
+        //hash user's current location
         GeoPoint testCoordinate = new GeoPoint(-37.826934, 144.985326);
         GeoHash geohash = GeoHash.withCharacterPrecision(testCoordinate.getLatitude(), testCoordinate.getLongitude(), 12);
-        return "Not yet implemented";
+        String geohashString = geohash.toBase32().substring(0, 8); //8 characters for around 200m of precision
+        return geohashString;
+
+        /*
+        1->2->3->4.......->12 level
+        each layer has 12 characters
+        leaf node:
+            userId
+            Geopoint
+         */
+
+        /*
+        after 8th layer, retrieve every user under itb
+         */
+
     }
 
     @RequestMapping(value = "/grouping", method = RequestMethod.POST)
