@@ -5,6 +5,10 @@ import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
 import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import org.springframework.boot.SpringApplication;
@@ -51,13 +55,30 @@ public class Comp30022ServerEngineApplication {
        }
      */
     @RequestMapping(value = "/route", method = RequestMethod.POST)
-    public DirectionsResult routePlanning(@RequestBody RoutePair pairs) {
+    public String routePlanning(@RequestBody RoutePair pairs) {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
+        JsonParser parser = new JsonParser();
         try {
             int routeHashKey = RouteHash.hashOriginsDestinations(pairs.origins, pairs.destinations);
-            DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
-            db.updateRouteHashResult(routeHashKey, result);
-            return result;
+
+            if (db.routeResultInDb(routeHashKey)) {
+                //fetch string from the db
+                String routeString = db.getRouteResult(routeHashKey);
+
+                return routeString;
+            } else {
+                //get result
+                DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
+
+                //convert to string for storage
+                Gson objGson = new GsonBuilder().setPrettyPrinting().create();
+                String routeString = objGson.toJson(result);
+
+                //upload string to db
+                db.updateRouteResult(routeHashKey, routeString);
+
+                return routeString;
+            }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return null;
