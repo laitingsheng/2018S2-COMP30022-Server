@@ -1,5 +1,6 @@
 package com.example.COMP30022ServerEngine.FirebaseDB;
 
+import com.example.COMP30022ServerEngine.Util.PojoToJason;
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
@@ -43,10 +44,13 @@ public class FirebaseDb {
     }
 
     public void updateRouteHashResult(int hashKey, DirectionsResult result) {
+        // convert DirectionsResult to JSON
+        String resultInJson = PojoToJason.convert(result);
+
+        //upload to db
         db = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
-        docData.put("geocodedWaypoints", result.geocodedWaypoints);
-        docData.put("routes", result.routes);
+        docData.put("route", resultInJson);
         ApiFuture<WriteResult> future = db.collection(ROUTEHASHDB).document(Integer.toString(hashKey)).set(docData);
     }
 
