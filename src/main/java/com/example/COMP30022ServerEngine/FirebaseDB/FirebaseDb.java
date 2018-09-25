@@ -2,10 +2,7 @@ package com.example.COMP30022ServerEngine.FirebaseDB;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -23,6 +20,7 @@ public class FirebaseDb {
 
     private static final Logger LOGGER = Logger.getLogger(FirebaseDb.class.getName());
     private static final String ROUTEHASHDB = "routeResult";
+    private static final String USERLOCATIONDB = "userToLocation";
 
     private Firestore db;
 
@@ -55,6 +53,26 @@ public class FirebaseDb {
     /*
     function relates to route result
      */
+
+    public Map<String, Object> getUserLocationInfo(String userId) {
+        db = FirestoreClient.getFirestore();
+        DocumentReference docRef = db.collection(USERLOCATIONDB).document(userId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+
+        try {
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                return document.getData();
+            }
+            return null;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, e.toString(), e);
+            return null;
+        }
+
+
+
+    }
 
     public String getRouteResult(int hashKey) {
         db = FirestoreClient.getFirestore();

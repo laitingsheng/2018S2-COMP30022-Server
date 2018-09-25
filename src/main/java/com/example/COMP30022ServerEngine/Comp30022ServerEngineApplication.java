@@ -6,6 +6,8 @@ import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
 import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
+import com.example.COMP30022ServerEngine.Util.GeoHashing;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,11 +95,16 @@ public class Comp30022ServerEngineApplication {
 
     @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
     public String searchGroupId(String userId, String destination) {
-        //hash user's current location
-        GeoPoint testCoordinate = new GeoPoint(-37.826934, 144.985326);
-        GeoHash geohash = GeoHash.withCharacterPrecision(testCoordinate.getLatitude(), testCoordinate.getLongitude(), 12);
-        String geohashString = geohash.toBase32().substring(0, 8); //8 characters for around 200m of precision
-        return geohashString;
+        //Hard code for development
+        String testUserId = "testUserUUID";
+
+        Map<String, Object> userDocument  = db.getUserLocationInfo(testUserId);
+        //hash user's current location and destination location for grouping
+        GeoPoint userLocation = (GeoPoint) userDocument.get("location");
+        GeoPoint userDestination = (GeoPoint) userDocument.get("destination");
+        String neighbourHash = GeoHashing.hash(userLocation, 8);
+        String destinationHash = GeoHashing.hash(userDestination, 8);
+        return neighbourHash + "+" + destinationHash;
 
         /*
         1->2->3->4.......->12 level
