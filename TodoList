@@ -1,0 +1,70 @@
+
+Final Presentation:
+    demo
+    final report
+Report:
+    figure out our path # this is for bonus
+    Update documents:
+        WORKFLOW DOCUMENTS # done
+        db interface # sone
+        program and architecture design 
+        ui architecture 
+        ui interaction
+        specified design for old ppl
+        pull request
+
+Testing
+    Server Testing
+    client Testing
+    Java Testing
+Development:
+    Code refractoring and optimise, adding comment
+    Client:
+        UI:
+            help:
+                emergency contact
+                    video
+                    phone
+                dynamically call local police
+            Setting interface
+            initial and preference setup
+            Chat
+                group
+                video
+                video call
+            Navigation
+                voice output
+                text display
+                    ETA
+                    arrow
+                    text
+            Reconstruct
+        Java:
+            update user location
+            Tinson will handle all
+    Server:
+        return all user's location in a group
+        Databaxe
+            User-Info:
+                First
+                Last
+                UUID
+                email
+                password
+                Birthday
+                Gender
+                Emergency contact
+                Text Display
+                UserID
+            User-Location
+                userID
+                GeoPOint
+            Location-User
+                userID
+                GeoPOint
+                GeoHash (which is relfected in the key)
+            Group 
+
+
+
+

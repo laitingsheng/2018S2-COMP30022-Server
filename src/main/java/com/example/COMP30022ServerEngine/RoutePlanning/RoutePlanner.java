@@ -4,6 +4,7 @@ package com.example.COMP30022ServerEngine.RoutePlanning;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class RoutePlanner {
         this.geoApiContext = geoApiContext;
     }
 
-    public DirectionsResult getDirections(String[] origins, String[] destinations) throws Exception {
-        String[] wayPoints = combineWayPoints(origins, destinations);
+    public DirectionsResult getDirections(LatLng[] origins, LatLng[] destinations) throws Exception {
+        LatLng[] wayPoints = combineWayPoints(origins, destinations);
 
         DirectionsResult result =
                 DirectionsApi.newRequest(geoApiContext)
@@ -31,16 +32,16 @@ public class RoutePlanner {
         return result;
     }
 
-    private String[] combineWayPoints(String[] origins, String[] destinations) {
-        List<String> wayPoints = new ArrayList<>();
-        for (String o : origins) {
+    private LatLng[] combineWayPoints(LatLng[] origins, LatLng[] destinations) {
+        List<LatLng> wayPoints = new ArrayList<>();
+        for (LatLng o : origins) {
             wayPoints.add(o);
         }
-        for (String d : destinations) {
+        for (LatLng d : destinations) {
             wayPoints.add(d);
         }
 
-        String[] result = new String[wayPoints.size()];
+        LatLng[] result = new LatLng[wayPoints.size()];
         return wayPoints.toArray(result);
     }
 }
