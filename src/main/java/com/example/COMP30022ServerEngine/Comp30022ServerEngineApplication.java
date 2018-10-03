@@ -1,13 +1,11 @@
 package com.example.COMP30022ServerEngine;
 
 
-import ch.hsr.geohash.GeoHash;
 import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
 import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
 import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
 import com.example.COMP30022ServerEngine.Util.GeoHashing;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -98,7 +96,7 @@ public class Comp30022ServerEngineApplication {
         //Hard code for development
         String testUserId = "testUserUUID";
 
-        Map<String, Object> userDocument  = db.getUserLocationInfo(testUserId);
+        Map<String, Object> userDocument = db.getUserLocationInfo(testUserId);
         //hash user's current location and destination location for grouping
         GeoPoint userLocation = (GeoPoint) userDocument.get("location");
         GeoPoint userDestination = (GeoPoint) userDocument.get("destination");
