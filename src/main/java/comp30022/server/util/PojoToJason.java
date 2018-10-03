@@ -1,4 +1,4 @@
-package comp30022.server.Util;
+package comp30022.server.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

@@ -67,18 +67,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Google Maps Service Java Client-->
+        <!-- https://mvnrepository.com/artifact/com.google.maps/google-maps-services -->
         <dependency>
             <groupId>com.google.maps</groupId>
             <artifactId>google-maps-services</artifactId>
-            <version>0.2.7</version>
+            <version>0.9.0</version>
         </dependency>
 
         <!--Firebase stuff-->
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
-            <version>6.4.0</version>
+            <version>6.5.0</version>
         </dependency>
 
         <!--GeoHashing for grouping algorithm-->
