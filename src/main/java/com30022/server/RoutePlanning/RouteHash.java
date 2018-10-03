@@ -1,9 +1,11 @@
 package com30022.server.RoutePlanning;
 
+import com.google.maps.model.LatLng;
+
 import java.util.Arrays;
 
 public class RouteHash {
-    public static int hashOriginsDestinations(String[] origins, String[] destinations) {
+    public static int hashOriginsDestinations(LatLng[] origins, LatLng[] destinations) {
         //Sort the array first for hashing
         Arrays.sort(origins);
         Arrays.sort(destinations);
