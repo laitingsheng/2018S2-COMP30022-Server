@@ -1,4 +1,4 @@
-package com30022.server.twilio;
+package comp30022.server.twilio;
 
 public class TwilioConstants {
     public static final String TWILIO_APP_NAME = "GUGUGU";

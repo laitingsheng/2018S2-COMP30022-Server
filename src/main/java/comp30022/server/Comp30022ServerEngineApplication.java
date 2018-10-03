@@ -1,4 +1,4 @@
-package com30022.server;
+package comp30022.server;
 
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
@@ -6,13 +6,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
-import com30022.server.FirebaseDB.FirebaseDb;
-import com30022.server.RoutePlanning.RouteHash;
-import com30022.server.RoutePlanning.RoutePair;
-import com30022.server.RoutePlanning.RoutePlanner;
-import com30022.server.Util.GeoHashing;
-import com30022.server.twilio.TokenFactory;
-import com30022.server.twilio.TokenResponse;
+import comp30022.server.FirebaseDB.FirebaseDb;
+import comp30022.server.RoutePlanning.RouteHash;
+import comp30022.server.RoutePlanning.RoutePair;
+import comp30022.server.RoutePlanning.RoutePlanner;
+import comp30022.server.Util.GeoHashing;
+import comp30022.server.twilio.TokenFactory;
+import comp30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com30022.server.Constant.GOOGLEMAPAPIKEY;
-
 @SpringBootApplication
 @RestController
 public class Comp30022ServerEngineApplication {
@@ -32,7 +30,7 @@ public class Comp30022ServerEngineApplication {
     private static final Logger LOGGER = Logger.getLogger(Comp30022ServerEngineApplication.class.getName());
 
     //Maps API initialisation
-    private static GeoApiContext geoApiContext = new GeoApiContext.Builder().apiKey(GOOGLEMAPAPIKEY).build();
+    private static GeoApiContext geoApiContext = new GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build();
 
     //Firebase DB initialization
     private static FirebaseDb db = new FirebaseDb();

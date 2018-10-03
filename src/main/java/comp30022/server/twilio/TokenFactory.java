@@ -1,4 +1,4 @@
-package com30022.server.twilio;
+package comp30022.server.twilio;
 
 import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.AccessToken.Builder;
@@ -7,7 +7,7 @@ import com.twilio.jwt.accesstoken.Grant;
 
 import java.util.HashMap;
 
-import static com30022.server.twilio.TwilioConstants.*;
+import static comp30022.server.twilio.TwilioConstants.*;
 
 public class TokenFactory {
     private static final HashMap<String, TokenGenerator> generators = new HashMap<>();

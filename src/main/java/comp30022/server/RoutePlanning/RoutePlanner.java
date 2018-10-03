@@ -1,4 +1,4 @@
-package com30022.server.RoutePlanning;
+package comp30022.server.RoutePlanning;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;

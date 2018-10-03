@@ -1,6 +1,4 @@
-package com30022.server.RoutePlanning;
-
-import com.google.maps.model.LatLng;
+package comp30022.server.RoutePlanning;
 
 import com.google.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com30022.server.twilio
+package comp30022.server.twilio
 
 import com.twilio.jwt.accesstoken.AccessToken
 

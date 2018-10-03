@@ -1,4 +1,4 @@
-package com30022.server;
+package comp30022.server;
 
 import java.nio.file.Paths;
 

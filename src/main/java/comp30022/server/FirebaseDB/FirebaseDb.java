@@ -1,4 +1,4 @@
-package com30022.server.FirebaseDB;
+package comp30022.server.FirebaseDB;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -9,6 +9,7 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import comp30022.server.Constant;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -16,8 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com30022.server.Constant.FIREBASEADMINKEYPATH;
 
 public class FirebaseDb {
 
@@ -30,7 +29,7 @@ public class FirebaseDb {
     public FirebaseDb() {
         try {
             //Comment this for deploy
-            InputStream serviceAccount = new FileInputStream(FIREBASEADMINKEYPATH);
+            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
             //GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
