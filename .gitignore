@@ -15,6 +15,7 @@
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
+/.idea/uiDesigner.xml
 *.iws
 *.iml
 *.ipr

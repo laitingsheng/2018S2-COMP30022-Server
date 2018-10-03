@@ -11,6 +11,8 @@ import com30022.server.RoutePlanning.RouteHash;
 import com30022.server.RoutePlanning.RoutePair;
 import com30022.server.RoutePlanning.RoutePlanner;
 import com30022.server.Util.GeoHashing;
+import com30022.server.twilio.TokenFactory;
+import com30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -123,5 +125,10 @@ public class Comp30022ServerEngineApplication {
             return the groupID
          */
         return ResponseEntity.badRequest().body("Not Yet implemented");
+    }
+
+    @RequestMapping(value = "/twilio/token", method = RequestMethod.POST)
+    public TokenResponse dispatchToken(String type, String uid, String device) {
+        return TokenFactory.generateToken(type, uid, device);
     }
 }
