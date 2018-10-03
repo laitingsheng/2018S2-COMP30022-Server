@@ -14,7 +14,7 @@ private abstract class TokenGenerator protected constructor() {
 
     abstract operator fun invoke(uid: String, device: String): AccessToken
 
-    fun buildToken(grant: Grant, uid: String): AccessToken {
+    protected fun buildToken(grant: Grant, uid: String): AccessToken {
         return AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET).identity(uid).grant(grant)
             .build()
     }
