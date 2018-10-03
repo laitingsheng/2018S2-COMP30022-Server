@@ -165,7 +165,7 @@ public class Comp30022ServerEngineApplication {
         return new TokenResponse(uid, GENERATORS.get(type).generate(uid, device).toJwt());
     }
 
-    @RequestMapping(value = "/twilio/room", method = RequestMethod.POST)
+    @RequestMapping(value = "/twilio/call", method = RequestMethod.POST)
     public boolean createCall(String uid1, String uid2) {
         // TODO: Add user check and create room and voice grant if both free
         return false;
