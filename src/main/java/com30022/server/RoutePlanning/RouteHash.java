@@ -13,7 +13,7 @@ public class RouteHash {
         int desitnationsHashCode = Arrays.deepHashCode(destinations);
 
         //an additionaly layer of hashing as key value for result
-        int odHashCode = Arrays.hashCode(new int[]{originsHashCode, desitnationsHashCode});
+        int odHashCode = Arrays.hashCode(new int[] {originsHashCode, desitnationsHashCode});
 
         return odHashCode;
     }
