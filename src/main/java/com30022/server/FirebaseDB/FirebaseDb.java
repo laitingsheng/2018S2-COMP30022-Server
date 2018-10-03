@@ -1,4 +1,4 @@
-package com.example.COMP30022ServerEngine.FirebaseDB;
+package com30022.server.FirebaseDB;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.example.COMP30022ServerEngine.Constant.FIREBASEADMINKEYPATH;
+import static com30022.server.Constant.FIREBASEADMINKEYPATH;
 
 public class FirebaseDb {
 

@@ -1,4 +1,4 @@
-package com.example.COMP30022ServerEngine.RoutePlanning;
+package com30022.server.RoutePlanning;
 
 import java.util.Arrays;
 

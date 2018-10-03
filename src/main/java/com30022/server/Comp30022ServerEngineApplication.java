@@ -1,13 +1,11 @@
-package com.example.COMP30022ServerEngine;
+package com30022.server;
 
 
-import ch.hsr.geohash.GeoHash;
-import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
-import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
-import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
-import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
-import com.example.COMP30022ServerEngine.Util.GeoHashing;
-import com.google.cloud.firestore.DocumentSnapshot;
+import com30022.server.FirebaseDB.FirebaseDb;
+import com30022.server.RoutePlanning.RouteHash;
+import com30022.server.RoutePlanning.RoutePair;
+import com30022.server.RoutePlanning.RoutePlanner;
+import com30022.server.Util.GeoHashing;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.example.COMP30022ServerEngine.Constant.GOOGLEMAPAPIKEY;
+import static com30022.server.Constant.GOOGLEMAPAPIKEY;
 
 
 @SpringBootApplication

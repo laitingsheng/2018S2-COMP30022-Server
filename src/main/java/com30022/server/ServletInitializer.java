@@ -1,4 +1,4 @@
-package com.example.COMP30022ServerEngine;
+package com30022.server;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
