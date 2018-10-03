@@ -6,12 +6,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
+import com.twilio.jwt.accesstoken.AccessToken;
+import com.twilio.jwt.accesstoken.ChatGrant;
+import com.twilio.jwt.accesstoken.Grant;
 import comp30022.server.FirebaseDB.FirebaseDb;
 import comp30022.server.RoutePlanning.RouteHash;
 import comp30022.server.RoutePlanning.RoutePair;
 import comp30022.server.RoutePlanning.RoutePlanner;
 import comp30022.server.Util.GeoHashing;
-import comp30022.server.twilio.TokenFactory;
 import comp30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,9 +21,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static comp30022.server.twilio.TwilioConstants.*;
 
 @SpringBootApplication
 @RestController
@@ -34,6 +39,28 @@ public class Comp30022ServerEngineApplication {
 
     //Firebase DB initialization
     private static FirebaseDb db = new FirebaseDb();
+
+    private static HashMap<String, TokenGenerator> generators = new HashMap<>();
+
+    static {
+        generators.put("chat", (uid, device) -> {
+            ChatGrant grant = new ChatGrant();
+            grant.setServiceSid(TWILIO_CHAT_SERVICE_SID);
+            grant.setPushCredentialSid(TWILIO_FIREBASE_PUSH_CREDENTIAL);
+            grant.setEndpointId(TWILIO_APP_NAME + ":" + uid + ":" + device);
+
+            return buildToken(grant, uid);
+        });
+        // TODO: Add video token generator
+        // TODO: Add audio token generator
+    }
+
+    private static AccessToken buildToken(Grant grant, String uid) {
+        return new AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET)
+            .identity(uid)
+            .grant(grant)
+            .build();
+    }
 
     //Server start program
     public static void main(String[] args) {
@@ -127,6 +154,11 @@ public class Comp30022ServerEngineApplication {
 
     @RequestMapping(value = "/twilio/token", method = RequestMethod.POST)
     public TokenResponse dispatchToken(String type, String uid, String device) {
-        return TokenFactory.generateToken(type, uid, device);
+        return new TokenResponse(uid, generators.get(type).generate(uid, device));
+    }
+
+    @FunctionalInterface
+    private interface TokenGenerator {
+        AccessToken generate(String uid, String device);
     }
 }
