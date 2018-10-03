@@ -1,6 +1,7 @@
-package com.example.COMP30022ServerEngine.RoutePlanning;
+package com30022.server.RoutePlanning;
 
-import com.google.type.LatLng;
+
+import com.google.maps.model.LatLng;
 
 public class RoutePair {
     public LatLng[] origins;

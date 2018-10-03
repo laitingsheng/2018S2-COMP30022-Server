@@ -1,19 +1,18 @@
-package com.example.COMP30022ServerEngine;
+package com30022.server;
 
-
-import ch.hsr.geohash.GeoHash;
-import com.example.COMP30022ServerEngine.FirebaseDB.FirebaseDb;
-import com.example.COMP30022ServerEngine.RoutePlanning.RouteHash;
-import com.example.COMP30022ServerEngine.RoutePlanning.RoutePair;
-import com.example.COMP30022ServerEngine.RoutePlanning.RoutePlanner;
-import com.example.COMP30022ServerEngine.Util.GeoHashing;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
+import com30022.server.FirebaseDB.FirebaseDb;
+import com30022.server.RoutePlanning.RouteHash;
+import com30022.server.RoutePlanning.RoutePair;
+import com30022.server.RoutePlanning.RoutePlanner;
+import com30022.server.Util.GeoHashing;
+import com30022.server.twilio.TokenFactory;
+import com30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -24,8 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.example.COMP30022ServerEngine.Constant.GOOGLEMAPAPIKEY;
-
+import static com30022.server.Constant.GOOGLEMAPAPIKEY;
 
 @SpringBootApplication
 @RestController
@@ -34,17 +32,14 @@ public class Comp30022ServerEngineApplication {
     private static final Logger LOGGER = Logger.getLogger(Comp30022ServerEngineApplication.class.getName());
 
     //Maps API initialisation
-    private static GeoApiContext geoApiContext = new GeoApiContext.Builder()
-            .apiKey(GOOGLEMAPAPIKEY)
-            .build();
+    private static GeoApiContext geoApiContext = new GeoApiContext.Builder().apiKey(GOOGLEMAPAPIKEY).build();
 
     //Firebase DB initialization
     private static FirebaseDb db = new FirebaseDb();
 
-
     //Server start program
     public static void main(String[] args) {
-//        LOGGER.log(Level.INFO, FIREBASEADMINKEYPATH);
+        //        LOGGER.log(Level.INFO, FIREBASEADMINKEYPATH);
         SpringApplication.run(Comp30022ServerEngineApplication.class, args);
     }
 
@@ -98,10 +93,10 @@ public class Comp30022ServerEngineApplication {
         //Hard code for development
         String testUserId = "testUserUUID";
 
-        Map<String, Object> userDocument  = db.getUserLocationInfo(testUserId);
+        Map<String, Object> userDocument = db.getUserLocationInfo(testUserId);
         //hash user's current location and destination location for grouping
-        GeoPoint userLocation = (GeoPoint) userDocument.get("location");
-        GeoPoint userDestination = (GeoPoint) userDocument.get("destination");
+        GeoPoint userLocation = (GeoPoint)userDocument.get("location");
+        GeoPoint userDestination = (GeoPoint)userDocument.get("destination");
         String neighbourHash = GeoHashing.hash(userLocation, 8);
         String destinationHash = GeoHashing.hash(userDestination, 8);
         return neighbourHash + "+" + destinationHash;
@@ -132,4 +127,8 @@ public class Comp30022ServerEngineApplication {
         return ResponseEntity.badRequest().body("Not Yet implemented");
     }
 
+    @RequestMapping(value = "/twilio/token", method = RequestMethod.POST)
+    public TokenResponse dispatchToken(String type, String uid, String device) {
+        return TokenFactory.generateToken(type, uid, device);
+    }
 }

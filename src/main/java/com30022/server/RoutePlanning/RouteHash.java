@@ -1,9 +1,11 @@
-package com.example.COMP30022ServerEngine.RoutePlanning;
+package com30022.server.RoutePlanning;
+
+import com.google.maps.model.LatLng;
 
 import java.util.Arrays;
 
 public class RouteHash {
-    public static int hashOriginsDestinations(String[] origins, String[] destinations) {
+    public static int hashOriginsDestinations(LatLng[] origins, LatLng[] destinations) {
         //Sort the array first for hashing
         Arrays.sort(origins);
         Arrays.sort(destinations);
@@ -13,7 +15,7 @@ public class RouteHash {
         int desitnationsHashCode = Arrays.deepHashCode(destinations);
 
         //an additionaly layer of hashing as key value for result
-        int odHashCode = Arrays.hashCode(new int[]{originsHashCode, desitnationsHashCode});
+        int odHashCode = Arrays.hashCode(new int[] {originsHashCode, desitnationsHashCode});
 
         return odHashCode;
     }
