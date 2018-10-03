@@ -1,8 +1,11 @@
-package com.example.COMP30022ServerEngine.FirebaseDB;
+package com30022.server.FirebaseDB;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
@@ -14,7 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.example.COMP30022ServerEngine.Constant.FIREBASEADMINKEYPATH;
+import static com30022.server.Constant.FIREBASEADMINKEYPATH;
 
 public class FirebaseDb {
 
@@ -32,15 +35,12 @@ public class FirebaseDb {
 
             //GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(credentials)
-                    .build();
+            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
             FirebaseApp.initializeApp(options);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
         }
     }
-
 
     public void updateUser(String userId) {
         /*
@@ -69,9 +69,6 @@ public class FirebaseDb {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return null;
         }
-
-
-
     }
 
     public String getRouteResult(int hashKey) {

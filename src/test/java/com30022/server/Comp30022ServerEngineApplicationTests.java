@@ -1,4 +1,4 @@
-package com.example.COMP30022ServerEngine;
+package com30022.server;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

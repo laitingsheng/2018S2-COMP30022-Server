@@ -1,4 +1,4 @@
-package com.example.COMP30022ServerEngine.Util;
+package com30022.server.Util;
 
 import ch.hsr.geohash.GeoHash;
 import com.google.cloud.firestore.GeoPoint;
@@ -6,8 +6,7 @@ import com.google.cloud.firestore.GeoPoint;
 public class GeoHashing {
     private static final int PRECISION = 12;
 
-
-    public static String hash(GeoPoint location, int precisionLevel){
+    public static String hash(GeoPoint location, int precisionLevel) {
         // precisionLevel: 8 characters for around 200m of precision
 
         GeoHash geohash = GeoHash.withCharacterPrecision(location.getLatitude(), location.getLongitude(), PRECISION);

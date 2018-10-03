@@ -1,5 +1,4 @@
-package com.example.COMP30022ServerEngine.RoutePlanning;
-
+package com30022.server.RoutePlanning;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
@@ -22,13 +21,13 @@ public class RoutePlanner {
     public DirectionsResult getDirections(LatLng[] origins, LatLng[] destinations) throws Exception {
         LatLng[] wayPoints = combineWayPoints(origins, destinations);
 
-        DirectionsResult result =
-                DirectionsApi.newRequest(geoApiContext)
-                        .origin(origins[0])
-                        .destination(destinations[0])
-                        .waypoints(wayPoints)
-                        .optimizeWaypoints(true)
-                        .await();
+        DirectionsResult result = DirectionsApi
+            .newRequest(geoApiContext)
+            .origin(origins[0])
+            .destination(destinations[0])
+            .waypoints(wayPoints)
+            .optimizeWaypoints(true)
+            .await();
         return result;
     }
 
