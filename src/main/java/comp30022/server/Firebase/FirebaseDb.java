@@ -12,15 +12,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static comp30022.server.Firebase.FirebaseKt.getFirestore;
-
 public class FirebaseDb {
 
     private static final Logger LOGGER = Logger.getLogger(FirebaseDb.class.getName());
     private static final String ROUTEHASHDB = "routeResult";
     private static final String USERLOCATIONDB = "userToLocation";
 
-    private Firestore db = getFirestore();
+    private Firestore db = FirestoreClient.getFirestore();
 
     public void updateUser(String userId) {
         /*
