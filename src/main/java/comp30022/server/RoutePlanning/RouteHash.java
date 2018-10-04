@@ -7,8 +7,8 @@ import java.util.Arrays;
 public class RouteHash {
     public static int hashOriginsDestinations(LatLng[] origins, LatLng[] destinations) {
         //Sort the array first for hashing
-        Arrays.sort(origins);
-        Arrays.sort(destinations);
+//        Arrays.sort(origins);
+//        Arrays.sort(destinations);
 
         //Create Hashing
         int originsHashCode = Arrays.deepHashCode(origins);
