@@ -15,6 +15,8 @@ import com.twilio.jwt.accesstoken.VoiceGrant;
 import com.twilio.jwt.client.ClientCapability;
 import com.twilio.jwt.client.IncomingClientScope;
 import com.twilio.jwt.client.OutgoingClientScope;
+import com.twilio.twiml.VoiceResponse;
+import com.twilio.twiml.voice.Say;
 import comp30022.server.Firebase.FirebaseDb;
 import comp30022.server.RoutePlanning.RouteHash;
 import comp30022.server.RoutePlanning.RoutePair;
@@ -56,16 +58,6 @@ public class Comp30022ServerEngineApplication {
             return buildToken(grant, uid);
         });
         // TODO: Add video token generator
-
-        GENERATORS.put("voice", (uid, device) -> {
-            VoiceGrant grant = new VoiceGrant();
-            grant.setEndpointId(Constant.TWILIO_APP_NAME + ":" + uid + ":" + device);
-            grant.setIncomingAllow(true);
-            grant.setOutgoingApplicationSid(Constant.TWILIO_VOICE_APP_SID);
-            grant.setPushCredentialSid(Constant.TWILIO_FIREBASE_PUSH_CREDENTIAL);
-
-            return buildToken(grant, uid);
-        });
     }
 
     @NonNull
@@ -183,12 +175,6 @@ public class Comp30022ServerEngineApplication {
             ))
             .build()
             .toJwt());
-    }
-
-    @RequestMapping(value = "/twilio/voice", method = RequestMethod.POST)
-    @NonNull
-    public String generateTwiML(@NonNull String to) {
-        return null;
     }
 
     @FunctionalInterface
