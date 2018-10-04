@@ -72,7 +72,7 @@ public class Comp30022ServerEngineApplication {
 
     @GetMapping("/")
     public String hello() {
-        return "Guys the server for GUGUGU is now running";
+        return "Guys the server for GUGUGU is now running at version 8:39";
     }
 
     /*
