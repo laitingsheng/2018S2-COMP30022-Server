@@ -10,7 +10,6 @@ import com.twilio.jwt.accesstoken.VideoGrant
 import comp30022.server.twilio.*
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -23,14 +22,9 @@ private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
 @SpringBootApplication
 @RestController
 open class Server {
-    @GetMapping("/")
-    fun hello(): String {
-        return "Guys the server for GUGUGU is now running"
-    }
-
     @RequestMapping(value = ["/twilio", "/twilio/token"], method = [RequestMethod.POST])
-    fun dispatchToken(type: String, identity: String, extra: String): String? {
-        if (identity.isEmpty() || extra.isEmpty()) return null
+    fun dispatchToken(type: String?, identity: String?, extra: String?): String? {
+        if (identity === null || identity.isEmpty() || extra === null || extra.isEmpty()) return null
 
         val grant: Grant = when (type) {
             "chat" -> ChatGrant().setEndpointId("$TWILIO_APP_NAME:$identity:$extra").setPushCredentialSid(
