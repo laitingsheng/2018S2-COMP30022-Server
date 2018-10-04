@@ -2,6 +2,7 @@ package comp30022.server;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.GeoPoint;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -11,16 +12,20 @@ import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.ChatGrant;
 import com.twilio.jwt.accesstoken.Grant;
 import com.twilio.jwt.accesstoken.VoiceGrant;
+import com.twilio.jwt.client.ClientCapability;
+import com.twilio.jwt.client.IncomingClientScope;
+import com.twilio.jwt.client.OutgoingClientScope;
 import comp30022.server.Firebase.FirebaseDb;
 import comp30022.server.RoutePlanning.RouteHash;
 import comp30022.server.RoutePlanning.RoutePair;
 import comp30022.server.RoutePlanning.RoutePlanner;
 import comp30022.server.util.GeoHashing;
-import comp30022.server.twilio.TokenResponse;
+import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,13 +34,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static comp30022.server.Firebase.FirebaseKt.getFirestore;
-import static comp30022.server.twilio.Constants.*;
 
 @SpringBootApplication
 @RestController
 public class Comp30022ServerEngineApplication {
     private static final Logger LOGGER = Logger.getLogger(Comp30022ServerEngineApplication.class.getName());
+    @NonNull
     private static final Map<String, TokenGenerator> GENERATORS = new HashMap<>();
+    @NonNull
     private static final CollectionReference USERS = getFirestore().collection("users");
     //Maps API initialisation
     private static GeoApiContext geoApiContext = new GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build();
@@ -44,9 +50,9 @@ public class Comp30022ServerEngineApplication {
     static {
         GENERATORS.put("chat", (uid, device) -> {
             ChatGrant grant = new ChatGrant();
-            grant.setEndpointId(TWILIO_APP_NAME + ":" + uid + ":" + device);
-            grant.setPushCredentialSid(TWILIO_FIREBASE_PUSH_CREDENTIAL);
-            grant.setServiceSid(TWILIO_CHAT_SERVICE_SID);
+            grant.setEndpointId(Constant.TWILIO_APP_NAME + ":" + uid + ":" + device);
+            grant.setPushCredentialSid(Constant.TWILIO_FIREBASE_PUSH_CREDENTIAL);
+            grant.setServiceSid(Constant.TWILIO_CHAT_SERVICE_SID);
 
             return buildToken(grant, uid);
         });
@@ -54,17 +60,18 @@ public class Comp30022ServerEngineApplication {
 
         GENERATORS.put("voice", (uid, device) -> {
             VoiceGrant grant = new VoiceGrant();
-            grant.setEndpointId(TWILIO_APP_NAME + ":" + uid + ":" + device);
+            grant.setEndpointId(Constant.TWILIO_APP_NAME + ":" + uid + ":" + device);
             grant.setIncomingAllow(true);
-            grant.setOutgoingApplicationSid(TWILIO_VOICE_APP_SID);
-            grant.setPushCredentialSid(TWILIO_FIREBASE_PUSH_CREDENTIAL);
+            grant.setOutgoingApplicationSid(Constant.TWILIO_VOICE_APP_SID);
+            grant.setPushCredentialSid(Constant.TWILIO_FIREBASE_PUSH_CREDENTIAL);
 
             return buildToken(grant, uid);
         });
     }
 
+    @NonNull
     private static AccessToken buildToken(Grant grant, String uid) {
-        return new AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET)
+        return new AccessToken.Builder(Constant.TWILIO_ACCOUNT_SID, Constant.TWILIO_API_KEY, Constant.TWILIO_API_SECRET)
             .identity(uid)
             .grant(grant)
             .build();
@@ -161,18 +168,32 @@ public class Comp30022ServerEngineApplication {
     }
 
     @RequestMapping(value = {"/twilio", "/twilio/token"}, method = RequestMethod.POST)
-    public TokenResponse dispatchToken(String type, String uid, String device) {
-        return new TokenResponse(uid, GENERATORS.get(type).generate(uid, device).toJwt());
+    @NonNull
+    public TokenResponse dispatchToken(@NonNull String type, @NonNull String identity, @NonNull String device) {
+        return new TokenResponse(identity, GENERATORS.get(type).generate(identity, device).toJwt());
     }
 
-    @RequestMapping(value = "/twilio/call", method = RequestMethod.POST)
-    public boolean createCall(String uid1, String uid2) {
-        // TODO: Add user check and create room and voice grant if both free
-        return false;
+    @RequestMapping(value = "/twilio/voice/cap-token", method = RequestMethod.POST)
+    @NonNull
+    public TokenResponse dispatchVoiceCapToken(@NonNull String uid) {
+        return new TokenResponse(uid, new ClientCapability.Builder(Constant.TWILIO_ACCOUNT_SID,
+            Constant.TWILIO_AUTH_TOKEN
+        )
+            .scopes(Lists.newArrayList(new OutgoingClientScope.Builder(Constant.TWILIO_VOICE_APP_SID).build(),
+                new IncomingClientScope(uid)
+            ))
+            .build()
+            .toJwt());
+    }
+
+    @RequestMapping(value = "/twilio/voice", method = RequestMethod.POST)
+    @NonNull
+    public String generateTwiML(@NonNull String to) {
+        return null;
     }
 
     @FunctionalInterface
     private interface TokenGenerator {
-        AccessToken generate(String uid, String device);
+        AccessToken generate(@NonNull String uid, @NonNull String device);
     }
 }
