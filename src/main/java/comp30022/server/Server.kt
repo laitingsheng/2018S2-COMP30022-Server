@@ -22,6 +22,7 @@ import java.util.logging.Logger
 
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
 private lateinit var ROOMS: CollectionReference
+private lateinit var USERS: CollectionReference
 
 @SpringBootApplication
 @RestController
@@ -97,6 +98,7 @@ fun main(args: Array<String>) {
         ).build()
     )
     ROOMS = FirestoreClient.getFirestore().collection("rooms")
+    USERS = FirestoreClient.getFirestore().collection("users")
 
     Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     runApplication<Server>(*args)

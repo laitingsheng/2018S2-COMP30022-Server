@@ -18,7 +18,7 @@ public class FirebaseDb {
     private static final String ROUTEHASHDB = "routeResult";
     private static final String USERLOCATIONDB = "userToLocation";
 
-    private Firestore db = FirestoreClient.getFirestore();
+    private Firestore db;
 
     public void updateUser(String userId) {
         /*
