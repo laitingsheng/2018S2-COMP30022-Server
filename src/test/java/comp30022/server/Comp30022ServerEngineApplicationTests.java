@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -16,13 +19,16 @@ public class Comp30022ServerEngineApplicationTests {
     @Test
     public void routePlanningTest() {
         Comp30022ServerEngineApplication application = new Comp30022ServerEngineApplication();
-        RoutePair routes = new RoutePair();
-        GeoPoint starts = new GeoPoint(37, 145);
-        GeoPoint end = new GeoPoint(37.01, 145.01);
-        routes.origins = new GeoPoint[1];
-        routes.origins[0] = starts;
-        routes.destinations = new GeoPoint[1];
-        routes.destinations[0] = end;
+
+        String[] origins = new String[1];
+        origins[0] = "-37.7984983,144.961";
+        String[] destinations = new String[1];
+        destinations[0] = "-37.79948794931647,144.96114693582058";
+
+        HashMap<String, String[]> routes = new HashMap<String, String[]>();
+        routes.put("origins", origins);
+        routes.put("destinations", destinations);
+
         assertNotNull(application.routePlanning(routes));
     }
 
@@ -36,15 +42,20 @@ public class Comp30022ServerEngineApplicationTests {
     @Test
     public void routePlanningTest3() {
         Comp30022ServerEngineApplication application = new Comp30022ServerEngineApplication();
-        RoutePair routes = new RoutePair();
-        GeoPoint starts = new GeoPoint(37, 145);
-        GeoPoint end = new GeoPoint(37.01, 145.01);
-        routes.origins = new GeoPoint[2];
-        routes.origins[0] = starts;
-        routes.origins[1] = starts;
-        routes.destinations = new GeoPoint[2];
-        routes.destinations[0] = end;
-        routes.destinations[1] = end;
+
+
+        String[] origins = new String[2];
+        origins[0] = "-37.7984983,144.961";
+        origins[1] = "-37.7984983,144.961";
+        String[] destinations = new String[2];
+        destinations[0] = "-37.79948794931647,144.96114693582058";
+        destinations[1] = "-37.79948794931647,144.96114693582058";
+
+
+        HashMap<String, String[]> routes = new HashMap<String, String[]>();
+        routes.put("origins", origins);
+        routes.put("destinations", destinations);
+
         assertNotNull(application.routePlanning(routes));
     }
 
