@@ -11,7 +11,6 @@ import comp30022.server.RoutePlanning.RouteHash;
 import comp30022.server.RoutePlanning.RoutePair;
 import comp30022.server.RoutePlanning.RoutePlanner;
 import comp30022.server.util.GeoHashing;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
