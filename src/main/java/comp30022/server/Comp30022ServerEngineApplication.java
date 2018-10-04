@@ -13,6 +13,7 @@ import comp30022.server.FirebaseDB.FirebaseDb;
 import comp30022.server.RoutePlanning.RouteHash;
 import comp30022.server.RoutePlanning.RoutePair;
 import comp30022.server.RoutePlanning.RoutePlanner;
+import comp30022.server.Util.Converter;
 import comp30022.server.Util.GeoHashing;
 import comp30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,11 +82,15 @@ public class Comp30022ServerEngineApplication {
        }
      */
     @RequestMapping(value = "/route", method = RequestMethod.POST)
-    public ResponseEntity routePlanning(@RequestBody RoutePair pairs) {
+    public ResponseEntity routePlanning(@RequestBody Map<String, String[]> pairs) {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
-        JsonParser parser = new JsonParser();
         try {
-            int routeHashKey = RouteHash.hashOriginsDestinations(pairs.origins, pairs.destinations);
+            LOGGER.log(Level.INFO, pairs.get("origins").toString());
+            LOGGER.log(Level.INFO, pairs.get("destinations").toString());
+
+            GeoPoint[] origins = Converter.parseGeoPoints(pairs.get("origins"));
+            GeoPoint[] destinations = Converter.parseGeoPoints(pairs.get("destinations"));
+            int routeHashKey = RouteHash.hashOriginsDestinations(origins, destinations);
 
             if (db.routeResultInDb(routeHashKey)) {
                 //fetch string from the db
@@ -93,7 +99,7 @@ public class Comp30022ServerEngineApplication {
                 return ResponseEntity.ok(routeString);
             } else {
                 //get result
-                DirectionsResult result = planner.getDirections(pairs.origins, pairs.destinations);
+                DirectionsResult result = planner.getDirections(origins, destinations);
                 if (result.routes.length == 0) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No route avaiable");
                 }

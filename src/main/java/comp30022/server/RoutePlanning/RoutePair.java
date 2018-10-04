@@ -1,10 +1,12 @@
 package comp30022.server.RoutePlanning;
 
-import com.google.maps.model.LatLng;
+import com.google.cloud.firestore.GeoPoint;
 
-public class RoutePair {
-    public LatLng[] origins;
-    public LatLng[] destinations;
+import java.io.Serializable;
+
+public class RoutePair implements Serializable {
+    public String[] origins;
+    public String[] destinations;
 }
 
 
