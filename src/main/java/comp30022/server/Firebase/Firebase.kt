@@ -9,7 +9,7 @@ import java.io.FileInputStream
 import java.nio.file.Paths
 
 private val firestore = FirestoreClient.getFirestore(
-    FirebaseApp.initializeApp(
+    if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
         FirebaseOptions.builder().setCredentials(
             GoogleCredentials.fromStream(
                 FileInputStream(
@@ -19,7 +19,7 @@ private val firestore = FirestoreClient.getFirestore(
                 )
             )
         ).build()
-    )
+    ) else FirebaseApp.getInstance()
 )
 
 fun getFirestore(): Firestore {
