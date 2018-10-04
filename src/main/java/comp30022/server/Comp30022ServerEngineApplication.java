@@ -85,9 +85,6 @@ public class Comp30022ServerEngineApplication {
     public ResponseEntity routePlanning(@RequestBody Map<String, String[]> pairs) {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
-            LOGGER.log(Level.INFO, pairs.get("origins").toString());
-            LOGGER.log(Level.INFO, pairs.get("destinations").toString());
-
             GeoPoint[] origins = Converter.parseGeoPoints(pairs.get("origins"));
             GeoPoint[] destinations = Converter.parseGeoPoints(pairs.get("destinations"));
             int routeHashKey = RouteHash.hashOriginsDestinations(origins, destinations);
