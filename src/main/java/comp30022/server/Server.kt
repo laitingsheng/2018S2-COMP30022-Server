@@ -9,7 +9,6 @@ import com.twilio.Twilio
 import com.twilio.jwt.accesstoken.AccessToken
 import com.twilio.jwt.accesstoken.ChatGrant
 import com.twilio.jwt.accesstoken.VideoGrant
-import com.twilio.rest.notify.v1.Credential
 import com.twilio.rest.notify.v1.service.Binding
 import com.twilio.rest.video.v1.Room
 import comp30022.server.twilio.*
@@ -24,7 +23,6 @@ import java.util.logging.Logger
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
 private lateinit var USERS: CollectionReference
 private lateinit var CALLING: CollectionReference
-private lateinit var FIREBASE_CREDENTIAL: Credential
 
 @SpringBootApplication
 @RestController
@@ -127,19 +125,16 @@ open class Server {
 fun main(args: Array<String>) {
     if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
         FirebaseOptions.Builder().setCredentials(
-            //                GoogleCredentials.fromStream(
-            //                    java.io.FileInputStream(
-            //                        java.nio.file.Paths.get(
-            //                            ".", "src", "main", "resources", "firebase-admin-sdk.json"
-            //                        ).toAbsolutePath().normalize().toString()
-            //                    )
-            //                )
-            GoogleCredentials.getApplicationDefault()
+            GoogleCredentials.fromStream(
+                java.io.FileInputStream(
+                    java.nio.file.Paths.get(
+                        ".", "src", "main", "resources", "firebase-admin-sdk.json"
+                    ).toAbsolutePath().normalize().toString()
+                )
+            )
+            //            GoogleCredentials.getApplicationDefault()
         ).build()
     )
-
-
-
 
     FirestoreClient.getFirestore().run {
         USERS = collection("users")
