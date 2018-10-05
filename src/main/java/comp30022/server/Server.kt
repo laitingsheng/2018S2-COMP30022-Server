@@ -10,6 +10,7 @@ import com.twilio.jwt.accesstoken.AccessToken
 import com.twilio.jwt.accesstoken.ChatGrant
 import com.twilio.jwt.accesstoken.VideoGrant
 import com.twilio.rest.notify.v1.service.Binding
+import com.twilio.rest.notify.v1.service.Notification
 import com.twilio.rest.video.v1.Room
 import comp30022.server.twilio.*
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -104,16 +105,17 @@ open class Server {
         }
     }
 
-    @RequestMapping(value = ["/twilio/call", "twilio/call/invite"], method = [RequestMethod.POST])
-    fun invite(to: String?): Boolean {
+    @RequestMapping(value = ["twilio/call/invite"], method = [RequestMethod.POST])
+    fun invite(identity: String?, roomSID: String?): String? {
         return try {
-            // Notification.creator(TWILIO_SERVICE_SID).setIdentity(to!!).setPriority(Notification.Priority.HIGH)
-            // true
-            false
+            if (identity!!.isEmpty() || roomSID!!.isEmpty()) null
+            else Notification.creator(TWILIO_SERVICE_SID).setIdentity(identity).setBody(roomSID).setPriority(
+                Notification.Priority.HIGH
+            ).create().sid
         } catch (e: Exception) {
             LOGGER.log(Level.INFO, "Invalid request", e)
             // any exceptions will return false represents invitation fail
-            false
+            null
         }
     }
 
