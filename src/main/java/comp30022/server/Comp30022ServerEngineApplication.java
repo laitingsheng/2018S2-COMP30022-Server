@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +87,16 @@ public class Comp30022ServerEngineApplication {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
             LOGGER.log(Level.INFO, pairs.toString());
+
+            // Sort the array first for hashing
+            Arrays.sort(pairs.get("origins"));
+            Arrays.sort(pairs.get("destinations"));
+
+            // Parse the array
             GeoPoint[] origins = Converter.parseGeoPoints(pairs.get("origins"));
             GeoPoint[] destinations = Converter.parseGeoPoints(pairs.get("destinations"));
+
+            // Get Hashing
             int routeHashKey = RouteHash.hashOriginsDestinations(origins, destinations);
 
             if (db.routeResultInDb(routeHashKey)) {
