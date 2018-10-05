@@ -127,17 +127,25 @@ open class Server {
 }
 
 fun main(args: Array<String>) {
+
+    // this is the credential to use on local
+//    var credential = GoogleCredentials.fromStream(
+//        FileInputStream(
+//            Paths.get(
+//                ".", "src", "main", "resources", "firebase-admin-sdk.json"
+//            ).toAbsolutePath().normalize().toString()
+//        )
+//    )
+
+    // this is the credential for using on google cloud
+    var credential = GoogleCredentials.getApplicationDefault();
+
     if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
-        FirebaseOptions.builder().setCredentials(
-            GoogleCredentials.fromStream(
-                FileInputStream(
-                    Paths.get(
-                        ".", "src", "main", "resources", "firebase-admin-sdk.json"
-                    ).toAbsolutePath().normalize().toString()
-                )
-            )
-        ).build()
+        FirebaseOptions.Builder().setCredentials(credential).build()
     )
+
+
+
 
     FirestoreClient.getFirestore().run {
         USERS = collection("users")
