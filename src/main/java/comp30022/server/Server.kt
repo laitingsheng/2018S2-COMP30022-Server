@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import java.io.FileInputStream
 import java.nio.file.Paths
+import java.util.logging.Level
 import java.util.logging.Logger
 
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
@@ -47,6 +48,7 @@ open class Server {
                     .build().toJwt()
             }
         } catch (e: Exception) {
+            LOGGER.log(Level.INFO, "Invalid request", e)
             // any exceptions will incur a response of null
             null
         }
@@ -67,7 +69,7 @@ open class Server {
                 else -> null
             }!!.let {
                 // create a room of the given type which should be non-null and be in the Room.RoomType enum
-                Room.creator().setType(it).create().run {
+                Room.creator().setType(it).setEnableTurn(false).create().run {
                     // record the necessary information in Cloud Firestore for the client
                     ROOMS.document(sid).set(RoomRecord(sid, it.toString(), mediaRegion, maxParticipants))
                     // response the SID of the room to the request
@@ -75,9 +77,15 @@ open class Server {
                 }
             }
         } catch (e: Exception) {
+            LOGGER.log(Level.INFO, "Invalid request", e)
             // any exceptions will incur a response of null
             null
         }
+    }
+
+    @RequestMapping(value = ["/twilio/call", "twilio/call/invite"], method = [RequestMethod.POST])
+    fun invite(): Boolean {
+        return false
     }
 
     @RequestMapping(value = ["/twilio/room-status"], method = [RequestMethod.POST])
