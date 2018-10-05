@@ -66,13 +66,13 @@ public class Comp30022ServerEngineApplication {
 
     //Server start program
     public static void main(String[] args) {
-        //        LOGGER.log(Level.INFO, FIREBASEADMINKEYPATH);
+        LOGGER.log(Level.INFO, "Application has started running");
         SpringApplication.run(Comp30022ServerEngineApplication.class, args);
     }
 
     @GetMapping("/")
     public String hello() {
-        return "Guys the server for GUGUGU is now running at version 8:39";
+        return "Guys the server for GUGUGU is now running at version 10:12";
     }
 
     /*
@@ -85,6 +85,7 @@ public class Comp30022ServerEngineApplication {
     public ResponseEntity routePlanning(@RequestBody Map<String, String[]> pairs) {
         RoutePlanner planner = new RoutePlanner(geoApiContext);
         try {
+            LOGGER.log(Level.INFO, pairs.toString());
             GeoPoint[] origins = Converter.parseGeoPoints(pairs.get("origins"));
             GeoPoint[] destinations = Converter.parseGeoPoints(pairs.get("destinations"));
             int routeHashKey = RouteHash.hashOriginsDestinations(origins, destinations);

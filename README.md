@@ -20,6 +20,10 @@ mvn appengine:deploy
 gcloud app logs tail -s defaul
 ```
 
+or Go to https://console.cloud.google.com/logs/viewer
+
+select GAE Application
+
 ### Install the Google App Engine SDK for Java
 
 ```

@@ -29,10 +29,10 @@ public class FirebaseDb {
     public FirebaseDb() {
         try {
             //Comment this for deploy
-            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
+//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
-            //GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
             FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
             FirebaseApp.initializeApp(options);
