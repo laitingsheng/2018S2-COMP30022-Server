@@ -1,7 +1,6 @@
 package comp30022.server.RoutePlanning;
 
 import com.google.cloud.firestore.GeoPoint;
-import com.google.maps.model.LatLng;
 
 import java.util.Arrays;
 

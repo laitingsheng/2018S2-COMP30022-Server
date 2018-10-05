@@ -18,8 +18,6 @@ import org.springframework.boot.runApplication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import java.io.FileInputStream
-import java.nio.file.Paths
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -127,21 +125,17 @@ open class Server {
 }
 
 fun main(args: Array<String>) {
-
-    // this is the credential to use on local
-//    var credential = GoogleCredentials.fromStream(
-//        FileInputStream(
-//            Paths.get(
-//                ".", "src", "main", "resources", "firebase-admin-sdk.json"
-//            ).toAbsolutePath().normalize().toString()
-//        )
-//    )
-
-    // this is the credential for using on google cloud
-    var credential = GoogleCredentials.getApplicationDefault();
-
     if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
-        FirebaseOptions.Builder().setCredentials(credential).build()
+        FirebaseOptions.Builder().setCredentials(
+            //                GoogleCredentials.fromStream(
+            //                    java.io.FileInputStream(
+            //                        java.nio.file.Paths.get(
+            //                            ".", "src", "main", "resources", "firebase-admin-sdk.json"
+            //                        ).toAbsolutePath().normalize().toString()
+            //                    )
+            //                )
+            GoogleCredentials.getApplicationDefault()
+        ).build()
     )
 
 
