@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {Comp30022ServerEngineApplication.class})
 public class Comp30022ServerEngineApplicationTests {
 
     @Test
