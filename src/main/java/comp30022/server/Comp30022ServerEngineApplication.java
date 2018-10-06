@@ -8,9 +8,9 @@ import com.google.maps.model.DirectionsResult;
 import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.ChatGrant;
 import com.twilio.jwt.accesstoken.Grant;
-import comp30022.server.exceptions.NoGrouptoJoinException;
+import comp30022.server.exception.NoGrouptoJoinException;
 import comp30022.server.firebase.FirebaseDb;
-import comp30022.server.groupings.GroupAdmin;
+import comp30022.server.grouping.GroupAdmin;
 import comp30022.server.routeplanning.RouteHash;
 import comp30022.server.routeplanning.RoutePlanner;
 import comp30022.server.utility.Converter;
@@ -131,7 +131,7 @@ public class Comp30022ServerEngineApplication {
         String testUserId = "testUserUUID";
 
         Map<String, Object> userDocument = db.getUserLocationInfo(testUserId);
-        // hash user's current location and destination location for groupings
+        // hash user's current location and destination location for grouping
         GeoPoint userLocation = (GeoPoint)userDocument.get("location");
         GeoPoint userDestination = (GeoPoint)userDocument.get("destination");
         String neighbourHash = GeoHashing.hash(userLocation, 8);

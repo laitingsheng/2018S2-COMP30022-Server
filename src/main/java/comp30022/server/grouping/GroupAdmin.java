@@ -1,6 +1,6 @@
-package comp30022.server.groupings;
+package comp30022.server.grouping;
 
-import comp30022.server.exceptions.NoGrouptoJoinException;
+import comp30022.server.exception.NoGrouptoJoinException;
 
 public class GroupAdmin {
 

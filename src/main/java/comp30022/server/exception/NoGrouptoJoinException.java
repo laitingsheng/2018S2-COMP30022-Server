@@ -1,4 +1,4 @@
-package comp30022.server.exceptions;
+package comp30022.server.exception;
 
 public class NoGrouptoJoinException extends Exception{
     public NoGrouptoJoinException(){
