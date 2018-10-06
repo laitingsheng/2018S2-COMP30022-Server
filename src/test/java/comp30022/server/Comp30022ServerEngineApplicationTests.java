@@ -1,7 +1,5 @@
 package comp30022.server;
 
-import com.google.cloud.firestore.GeoPoint;
-import comp30022.server.RoutePlanning.RoutePair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +34,7 @@ public class Comp30022ServerEngineApplicationTests {
 //    public void routePlanningTest2() {
 //        Comp30022ServerEngineApplication application = new Comp30022ServerEngineApplication();
 //        RoutePair routes = new RoutePair();
-//        assertNull(application.routePlanning(routes));
+//        assertNull(application.routeplanning(routes));
 //    }
 
     @Test

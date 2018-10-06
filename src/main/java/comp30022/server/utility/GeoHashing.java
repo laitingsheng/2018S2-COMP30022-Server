@@ -1,4 +1,4 @@
-package comp30022.server.Util;
+package comp30022.server.utility;
 
 import ch.hsr.geohash.GeoHash;
 import com.google.cloud.firestore.GeoPoint;

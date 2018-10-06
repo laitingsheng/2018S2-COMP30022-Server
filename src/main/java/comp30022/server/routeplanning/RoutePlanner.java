@@ -1,11 +1,11 @@
-package comp30022.server.RoutePlanning;
+package comp30022.server.routeplanning;
 
 import com.google.cloud.firestore.GeoPoint;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
-import comp30022.server.Util.GeoToLat;
+import comp30022.server.utility.GeoToLat;
 
 import java.util.ArrayList;
 import java.util.List;

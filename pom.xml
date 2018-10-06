@@ -89,7 +89,7 @@
         </dependency>
 
 
-        <!--Util -->
+        <!--utility -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

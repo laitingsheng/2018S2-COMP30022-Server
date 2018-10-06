@@ -1,6 +1,4 @@
-package comp30022.server.RoutePlanning;
-
-import com.google.cloud.firestore.GeoPoint;
+package comp30022.server.routeplanning;
 
 import java.io.Serializable;
 

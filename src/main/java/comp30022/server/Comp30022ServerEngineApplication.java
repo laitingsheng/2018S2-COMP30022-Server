@@ -3,18 +3,18 @@ package comp30022.server;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.ChatGrant;
 import com.twilio.jwt.accesstoken.Grant;
-import comp30022.server.FirebaseDB.FirebaseDb;
-import comp30022.server.RoutePlanning.RouteHash;
-import comp30022.server.RoutePlanning.RoutePair;
-import comp30022.server.RoutePlanning.RoutePlanner;
-import comp30022.server.Util.Converter;
-import comp30022.server.Util.GeoHashing;
+import comp30022.server.exception.NoGrouptoJoinException;
+import comp30022.server.firebase.FirebaseDb;
+import comp30022.server.grouping.GroupAdmin;
+import comp30022.server.routeplanning.RouteHash;
+import comp30022.server.routeplanning.RoutePlanner;
+import comp30022.server.utility.Converter;
+import comp30022.server.utility.GeoHashing;
 import comp30022.server.twilio.TokenResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,25 +131,22 @@ public class Comp30022ServerEngineApplication {
         String testUserId = "testUserUUID";
 
         Map<String, Object> userDocument = db.getUserLocationInfo(testUserId);
-        //hash user's current location and destination location for grouping
+        // hash user's current location and destination location for grouping
         GeoPoint userLocation = (GeoPoint)userDocument.get("location");
         GeoPoint userDestination = (GeoPoint)userDocument.get("destination");
         String neighbourHash = GeoHashing.hash(userLocation, 8);
-        String destinationHash = GeoHashing.hash(userDestination, 8);
-        return neighbourHash + "+" + destinationHash;
 
-        /*
-        1->2->3->4.......->12 level
-        each layer has 12 characters
-        leaf node:
-            userId
-            Geopoint
-         */
-
-        /*
-        after 8th layer, retrieve every user under itb
-         */
-
+        GroupAdmin groupControl = new GroupAdmin();
+        String group;
+        // Go Through All Group too see the matching
+        try{
+            // Case we can find a group
+             group = groupControl.findNearestGroup(userId, destination);
+        } catch (NoGrouptoJoinException e){
+            // case we cannot find a group
+             group = groupControl.createGroup(userId);
+        }
+        return group;
     }
 
     @RequestMapping(value = "/grouping", method = RequestMethod.POST)
