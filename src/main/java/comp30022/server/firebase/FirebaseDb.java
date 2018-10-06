@@ -2,15 +2,16 @@ package comp30022.server.firebase;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import comp30022.server.exception.DbException;
+import comp30022.server.grouping.Group;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ public class FirebaseDb {
     private static final Logger LOGGER = Logger.getLogger(FirebaseDb.class.getName());
     private static final String ROUTEHASHDB = "routeResult";
     private static final String USERLOCATIONDB = "userToLocation";
+    private static final String GROUPINFO = "groupInfo";
 
     private Firestore db;
 
@@ -116,5 +118,20 @@ public class FirebaseDb {
             LOGGER.log(Level.WARNING, e.toString(), e);
             return false;
         }
+    }
+
+    public List<QueryDocumentSnapshot> getAllGroups(){
+        ApiFuture<QuerySnapshot> future = db.collection(GROUPINFO).get();
+        try{
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            return documents;
+        } catch (Exception e){
+            LOGGER.log(Level.INFO, e.toString(), e);
+            throw new DbException("Error in getAllGroups");
+        }
+    }
+
+    public void createGroup(Group group){
+
     }
 }

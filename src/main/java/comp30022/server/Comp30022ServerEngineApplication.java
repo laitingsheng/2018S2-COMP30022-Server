@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -126,27 +127,20 @@ public class Comp30022ServerEngineApplication {
     }
 
     @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
-    public String searchGroupId(String userId, String destination) {
-        //Hard code for development
-        String testUserId = "testUserUUID";
-
-        Map<String, Object> userDocument = db.getUserLocationInfo(testUserId);
-        // hash user's current location and destination location for grouping
-        GeoPoint userLocation = (GeoPoint)userDocument.get("location");
-        GeoPoint userDestination = (GeoPoint)userDocument.get("destination");
-        String neighbourHash = GeoHashing.hash(userLocation, 8);
-
+    public String searchGroupId(String userId, String destination, HttpServletResponse response) {
         GroupAdmin groupControl = new GroupAdmin();
         String group;
         // Go Through All Group too see the matching
         try{
             // Case we can find a group
-             group = groupControl.findNearestGroup(userId, destination);
+             return groupControl.findNearestGroup(userId, destination);
         } catch (NoGrouptoJoinException e){
             // case we cannot find a group
-             group = groupControl.createGroup(userId);
+             return groupControl.createGroup(userId);
+        } catch (RuntimeException e){
+            response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return "Error";
         }
-        return group;
     }
 
     @RequestMapping(value = "/grouping", method = RequestMethod.POST)
