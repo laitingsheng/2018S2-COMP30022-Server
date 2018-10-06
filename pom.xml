@@ -81,7 +81,7 @@
             <version>6.4.0</version>
         </dependency>
 
-        <!--GeoHashing for grouping algorithm-->
+        <!--GeoHashing for groupings algorithm-->
         <dependency>
             <groupId>ch.hsr</groupId>
             <artifactId>geohash</artifactId>
@@ -89,7 +89,7 @@
         </dependency>
 
 
-        <!--Util -->
+        <!--utility -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

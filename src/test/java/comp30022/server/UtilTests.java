@@ -1,7 +1,7 @@
 package comp30022.server;
 
 import com.google.cloud.firestore.GeoPoint;
-import comp30022.server.Util.GeoHashing;
+import comp30022.server.utility.GeoHashing;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

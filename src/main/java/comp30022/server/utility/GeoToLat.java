@@ -1,4 +1,4 @@
-package comp30022.server.Util;
+package comp30022.server.utility;
 
 import com.google.cloud.firestore.GeoPoint;
 import com.google.maps.model.LatLng;
