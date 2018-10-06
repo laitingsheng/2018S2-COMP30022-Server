@@ -80,7 +80,8 @@ open class Server {
         return try {
             if (guid!!.isEmpty()) false else {
                 // notify all members in a group for a new message
-                Notification.creator(TWILIO_SERVICE_SID).setTag(guid).setPriority(Notification.Priority.LOW).create()
+                Notification.creator(TWILIO_SERVICE_SID).setTag(listOf("default", guid))
+                    .setPriority(Notification.Priority.LOW).create()
                 true
             }
         } catch (t: Throwable) {
@@ -134,10 +135,8 @@ open class Server {
         return try {
             if (identity!!.isEmpty() || roomSID!!.isEmpty()) false
             else {
-                Notification.creator(TWILIO_SERVICE_SID).setIdentity(identity).setTag("video").setBody(roomSID)
-                    .setPriority(
-                        Notification.Priority.HIGH
-                    ).create()
+                Notification.creator(TWILIO_SERVICE_SID).setIdentity(identity).setTag(listOf("default", "video"))
+                    .setBody(roomSID).setPriority(Notification.Priority.HIGH).create()
                 true
             }
         } catch (t: Throwable) {
