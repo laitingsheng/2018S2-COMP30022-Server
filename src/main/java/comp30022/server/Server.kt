@@ -75,9 +75,18 @@ open class Server {
         }
     }
 
-    @RequestMapping(value = ["/twilio/chat/token"], method = [RequestMethod.POST])
-    fun notifyMembers(): Boolean {
-        return false
+    @RequestMapping(value = ["/twilio/chat/notify"], method = [RequestMethod.POST])
+    fun notifyMembers(guid: String?): Boolean {
+        return try {
+            if (guid!!.isEmpty()) false else {
+                // notify all members in a group for a new message
+                Notification.creator(TWILIO_SERVICE_SID).setTag(guid).setPriority(Notification.Priority.LOW).create()
+                true
+            }
+        } catch (t: Throwable) {
+            LOGGER.log(Level.SEVERE, "invalid notification request", t)
+            false
+        }
     }
 
     @RequestMapping(value = ["/twilio/room/create"], method = [RequestMethod.POST])
@@ -132,8 +141,7 @@ open class Server {
                 true
             }
         } catch (t: Throwable) {
-            LOGGER.log(Level.INFO, "Invalid request", t)
-            // any exceptions will return false represents invitation fail
+            LOGGER.log(Level.SEVERE, "invalid invitation notification", t)
             false
         }
     }
