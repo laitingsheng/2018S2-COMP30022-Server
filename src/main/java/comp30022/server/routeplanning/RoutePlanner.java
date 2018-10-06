@@ -5,7 +5,7 @@ import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
-import comp30022.server.utility.GeoToLat;
+import comp30022.server.util.GeoToLat;
 
 import java.util.ArrayList;
 import java.util.List;
