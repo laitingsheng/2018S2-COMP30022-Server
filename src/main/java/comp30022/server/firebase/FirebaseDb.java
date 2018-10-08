@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 public class FirebaseDb {
 
     private static final Logger LOGGER = Logger.getLogger(FirebaseDb.class.getName());
-    private static final String ROUTEHASHDB = "routeResult";
-    private static final String USERLOCATIONDB = "userToLocation";
-    private static final String GROUPINFO = "groupInfo";
+    public static final String ROUTEHASHDB = "routeResult";
+    public static final String USERLOCATIONDB = "userToLocation";
+    public static final String GROUPINFO = "groupInfo";
 
     private Firestore db;
 

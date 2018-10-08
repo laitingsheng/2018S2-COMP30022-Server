@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,14 +130,17 @@ public class Comp30022ServerEngineApplication {
     @RequestMapping(value = "/group/joingroup", method = RequestMethod.POST)
     public String searchGroupId(String userId, String destination, HttpServletResponse response) {
         GroupAdmin groupControl = new GroupAdmin();
-        String group;
+        GeoPoint dest = Converter.parseGeoPoint(destination);
+
+        Map<String, Object> userDocument = db.getUserLocationInfo(userId);
+
         // Go Through All Group too see the matching
         try{
             // Case we can find a group
-             return groupControl.findNearestGroup(userId, destination);
+             return groupControl.findNearestGroup(userId, userDocument, dest);
         } catch (NoGrouptoJoinException e){
             // case we cannot find a group
-             return groupControl.createGroup(userId);
+             return groupControl.createGroup(userId, userDocument, dest);
         } catch (RuntimeException e){
             response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return "Error";
