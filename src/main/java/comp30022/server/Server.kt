@@ -22,11 +22,12 @@ import comp30022.server.routeplanning.RouteHash
 import comp30022.server.routeplanning.RoutePlanner
 import comp30022.server.twilio.*
 import comp30022.server.util.Converter
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.springframework.boot.SpringApplication
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.Arrays
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -41,7 +42,7 @@ private fun buildToken(grant: Grant, identity: String): AccessToken {
         .build()
 }
 
-@SpringBootApplication
+//@SpringBootApplication
 @RestController
 open class Server {
 
@@ -162,7 +163,13 @@ open class Server {
     /**
      * Merge from Java
      */
-    @GetMapping("/")
+
+    @GetMapping("/hello")
+    fun helloKotlin(): String {
+        return "hello world"
+    }
+
+    @RequestMapping(value = ["/"], method = [RequestMethod.GET])
     fun hello(): String {
         return "Guys the server for GUGUGU is now running at version 10:12"
     }
@@ -173,7 +180,7 @@ open class Server {
         "destinations":[A,B,C,D,E]
        }
      */
-    @RequestMapping(value = "/route", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/route"], method = [RequestMethod.POST])
     fun routePlanning(@RequestBody pairs: Map<String, Array<String>>): ResponseEntity<*> {
         val planner = RoutePlanner(geoApiContext)
         try {
@@ -217,7 +224,7 @@ open class Server {
         }
     }
 
-    @RequestMapping(value = "/group/joingroup", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/group/joingroup"], method = [RequestMethod.POST])
     fun searchGroupId(userId: String, destination: String, response: HttpServletResponse): String {
         val groupControl = GroupAdmin()
         val dest = Converter.parseGeoPoint(destination)
@@ -239,7 +246,7 @@ open class Server {
         }
     }
 
-    @RequestMapping(value = "/grouping", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/grouping"], method = [RequestMethod.POST])
     fun grouping(user_id: String): ResponseEntity<*> {
         /*
             get this user's location
@@ -253,18 +260,22 @@ open class Server {
 }
 
 fun main(args: Array<String>) {
+    // this is the credential to use on local
+    //    var credential = GoogleCredentials.fromStream(
+    //        FileInputStream(
+    //            Paths.get(
+    //                ".", "src", "main", "resources", "firebase-admin-sdk.json"
+    //            ).toAbsolutePath().normalize().toString()
+    //        )
+    //    )
+
+    // this is the credential for using on google cloud
+    var credential = GoogleCredentials.getApplicationDefault();
+
     if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
-        FirebaseOptions.Builder().setCredentials(
-            GoogleCredentials.fromStream(
-                java.io.FileInputStream(
-                    java.nio.file.Paths.get(
-                        ".", "src", "main", "resources", "firebase-admin-sdk.json"
-                    ).toAbsolutePath().normalize().toString()
-                )
-            )
-            //            GoogleCredentials.getApplicationDefault()
-        ).build()
+        FirebaseOptions.Builder().setCredentials(credential).build()
     )
+
 
     FirestoreClient.getFirestore().run {
         USERS = collection("users")
@@ -272,5 +283,6 @@ fun main(args: Array<String>) {
     }
 
     Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    runApplication<Server>(*args)
+    //    runApplication<Server>(*args)
+    SpringApplication.run(Server::class.java, *args)
 }
