@@ -25,18 +25,6 @@ public class GroupAdminTest {
     GeoPoint NGV = new GeoPoint(-37.8226, 144.9689);
     GeoPoint FLINDER = new GeoPoint(-37.8183, 144.9671);
 
-    @Before
-    public void initialize(){
-//        try{
-//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-//            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
-//            FirebaseApp.initializeApp(options);
-//        } catch (Exception e){
-//            ;
-//        }
-    }
-
     @Test
     public void createGroupTest(){
         String userId = "testUserUUID";
@@ -70,7 +58,7 @@ public class GroupAdminTest {
 
     @Test
     public void findNearestGroupTest(){
-        String userId = "testUserUUID2";
+        String userId = "testUserUUID3";
 
         GroupAdmin control = new GroupAdmin();
         Map<String, Object> user = new HashMap<>();

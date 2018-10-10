@@ -72,10 +72,6 @@ public class GroupAdmin {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
 
-//        groupRef.update("members", FieldValue.arrayUnion((String)userDocument.get("id")));
-//        groupRef.update("origins", FieldValue.arrayUnion((GeoPoint)userDocument.get("location")));
-//        groupRef.update("destinations", FieldValue.arrayUnion(destination));
-
         try{
             // get total number of users in a group
             ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
