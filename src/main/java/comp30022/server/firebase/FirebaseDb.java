@@ -7,9 +7,12 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import comp30022.server.Constant;
 import comp30022.server.exception.DbException;
 import comp30022.server.grouping.Group;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +31,10 @@ public class FirebaseDb {
     public FirebaseDb() {
         try {
             //Comment this for deploy
-//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
-            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+//            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
             FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
             FirebaseApp.initializeApp(options);
@@ -121,6 +124,7 @@ public class FirebaseDb {
     }
 
     public List<QueryDocumentSnapshot> getAllGroups(){
+        db = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = db.collection(GROUPINFO).get();
         try{
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();

@@ -137,7 +137,9 @@ public class Comp30022ServerEngineApplication {
         // Go Through All Group too see the matching
         try{
             // Case we can find a group
-             return groupControl.findNearestGroup(userId, userDocument, dest);
+             String groupId = groupControl.findNearestGroup(userId, userDocument, dest);
+             groupControl.addUserToGroup(groupId, userDocument, dest);
+             return groupId;
         } catch (NoGrouptoJoinException e){
             // case we cannot find a group
              return groupControl.createGroup(userId, userDocument, dest);
