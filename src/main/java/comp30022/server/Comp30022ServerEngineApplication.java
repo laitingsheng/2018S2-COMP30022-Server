@@ -6,15 +6,11 @@ import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import comp30022.server.Firebase.FirebaseDb;
-<<<<<<< HEAD
 import comp30022.server.exception.NoGrouptoJoinException;
 import comp30022.server.grouping.GroupAdmin;
 import comp30022.server.routeplanning.RouteHash;
 import comp30022.server.routeplanning.RoutePlanner;
 import comp30022.server.util.Converter;
-import comp30022.server.util.GeoHashing;
-import comp30022.server.twilio.TokenResponse;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,16 +93,16 @@ public class Comp30022ServerEngineApplication {
         Map<String, Object> userDocument = db.getUserLocationInfo(userId);
 
         // Go Through All Group too see the matching
-        try{
+        try {
             // Case we can find a group
-             String groupId = groupControl.findNearestGroup(userId, userDocument, dest);
-             groupControl.addUserToGroup(groupId, userDocument, dest);
-             return groupId;
-        } catch (NoGrouptoJoinException e){
+            String groupId = groupControl.findNearestGroup(userId, userDocument, dest);
+            groupControl.addUserToGroup(groupId, userDocument, dest);
+            return groupId;
+        } catch (NoGrouptoJoinException e) {
             // case we cannot find a group
-             return groupControl.createGroup(userId, userDocument, dest);
-        } catch (RuntimeException e){
-            response.setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return groupControl.createGroup(userId, userDocument, dest);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return "Error";
         }
     }

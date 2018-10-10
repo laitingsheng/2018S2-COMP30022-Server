@@ -9,11 +9,9 @@ import comp30022.server.firebase.FirebaseDb;
 import comp30022.server.util.GeoHashing;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,19 +20,24 @@ public class GroupAdmin {
     private static final Logger LOGGER = Logger.getLogger(GroupAdmin.class.getName());
     private FirebaseDb db;
 
-    public GroupAdmin(){
+    public GroupAdmin() {
         db = new FirebaseDb();
     }
 
     /**
+     * @param userId
+     *     id of the user
+     * @param userDocument
+     *     a document fetched from firebase given userId
+     * @param destination
+     *     destination for user
      *
-     * @param userId id of the user
-     * @param userDocument a document fetched from firebase given userId
-     * @param destination destination for user
      * @return
+     *
      * @throws NoGrouptoJoinException
      */
-    public String findNearestGroup(String userId, Map<String, Object> userDocument, GeoPoint destination) throws NoGrouptoJoinException {
+    public String findNearestGroup(String userId, Map<String, Object> userDocument, GeoPoint destination)
+        throws NoGrouptoJoinException {
         // Get user's current location and geo hashing
         GeoPoint userLocation = (GeoPoint)userDocument.get("location");
 
@@ -42,10 +45,10 @@ public class GroupAdmin {
         String userHash = GeoHashing.hash(userLocation, precisionLevel);
 
         // get All group's info
-        try{
+        try {
             // Looking for the matched group
             List<QueryDocumentSnapshot> groups = db.getAllGroups();
-            for (QueryDocumentSnapshot group: groups){
+            for (QueryDocumentSnapshot group : groups) {
                 GeoPoint groupLocation = group.getGeoPoint("groupLocation");
                 String groupHash = GeoHashing.hash(groupLocation, precisionLevel);
                 if (groupHash.equals(userHash)) {
@@ -56,23 +59,25 @@ public class GroupAdmin {
 
             // If no group, throw exception
             throw new NoGrouptoJoinException();
-        } catch(RuntimeException e){
+        } catch (RuntimeException e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             throw new RuntimeException("Error in find NearestGroup");
         }
     }
 
     /**
-     *
-     * @param groupId id of the user
-     * @param userDocument a document fetch from firebase given userId
-     * @param destination destination for user
+     * @param groupId
+     *     id of the user
+     * @param userDocument
+     *     a document fetch from firebase given userId
+     * @param destination
+     *     destination for user
      */
-    public void addUserToGroup(String groupId, Map<String, Object> userDocument, GeoPoint destination){
+    public void addUserToGroup(String groupId, Map<String, Object> userDocument, GeoPoint destination) {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
 
-        try{
+        try {
             // get total number of users in a group
             ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
             int membersCount = membersRef.get().getDocuments().size();
@@ -80,25 +85,23 @@ public class GroupAdmin {
             // adding the member
             Map<String, Object> member = createMember(userDocument, destination);
             member.put("role", "member");
-            groupRef.collection("members")
-                    .document((String)userDocument.get("id"))
-                    .set(member);
-
+            groupRef.collection("members").document((String)userDocument.get("id")).set(member);
 
             // update groupLocation
             GeoPoint groupLocation = groupRef.get().get().getGeoPoint("groupLocation");
             GeoPoint userLocation = (GeoPoint)userDocument.get("location");
             GeoPoint newGroupLocation = new GeoPoint(
-                (groupLocation.getLatitude()*membersCount+userLocation.getLatitude())/(membersCount+1),
-                (groupLocation.getLongitude()*membersCount+userLocation.getLongitude())/(membersCount+1));
+                (groupLocation.getLatitude() * membersCount + userLocation.getLatitude()) / (membersCount + 1),
+                (groupLocation.getLongitude() * membersCount + userLocation.getLongitude()) / (membersCount + 1)
+            );
             groupRef.update("groupLocation", newGroupLocation);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             throw new RuntimeException("Error in adding user");
         }
     }
 
-    public Map<String, Object> createMember(Map<String, Object> userDoc, GeoPoint destination){
+    public Map<String, Object> createMember(Map<String, Object> userDoc, GeoPoint destination) {
         Map<String, Object> member = new HashMap<>();
         Instant instant = Instant.now();
         member.put("destination", destination);
@@ -109,15 +112,19 @@ public class GroupAdmin {
     }
 
     /**
+     * @param userId:
+     *     id of the user
+     * @param userDocument:
+     *     a document fetch from Firebase about user
+     * @param destination:
+     *     the destination of user
      *
-     * @param userId: id of the user
-     * @param userDocument: a document fetch from Firebase about user
-     * @param destination: the destination of user
      * @return
+     *
      * @throws DbException
      */
     public String createGroup(String userId, Map<String, Object> userDocument, GeoPoint destination)
-        throws DbException{
+        throws DbException {
 
         // create for field
         Map<String, Object> group = new HashMap<>();
@@ -128,20 +135,15 @@ public class GroupAdmin {
         Firestore db2 = FirestoreClient.getFirestore();
         ApiFuture<DocumentReference> addedDocRef = db2.collection(FirebaseDb.GROUPINFO).add(group);
 
-
-        try{
+        try {
 
             String groupUUID = addedDocRef.get().getId();
             // create for document
             Map<String, Object> member = createMember(userDocument, destination);
             member.put("role", "owner");
-            db2.collection(FirebaseDb.GROUPINFO)
-               .document(groupUUID)
-               .collection("members")
-               .document(userId)
-               .set(member);
+            db2.collection(FirebaseDb.GROUPINFO).document(groupUUID).collection("members").document(userId).set(member);
             return groupUUID;
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             throw new DbException("Error in creating group");
         }

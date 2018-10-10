@@ -9,13 +9,13 @@ public class Group {
     public final GeoPoint[] origins;
     public final GeoPoint[] destination;
 
-    public Group(String groupId, GeoPoint groupLocation, String[] users,
-                GeoPoint[] origins, GeoPoint[] destinations){
+    public Group(
+        String groupId, GeoPoint groupLocation, String[] users, GeoPoint[] origins, GeoPoint[] destinations
+    ) {
         this.groupId = groupId;
         this.groupLocation = groupLocation;
         this.users = users;
         this.origins = origins;
         this.destination = destinations;
     }
-
 }
