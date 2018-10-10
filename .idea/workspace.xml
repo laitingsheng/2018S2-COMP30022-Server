@@ -3,9 +3,18 @@
   <component name="ChangeListManager">
     <list default="true" id="5f22835a-5a99-4f99-aa6f-ea78836dadb4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/Server.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/comp30022/server/Server.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/appengine-web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/appengine-web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/comp30022/server/GroupAdminTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/comp30022/server/GroupAdminTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/Server.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/Server.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/exception/DbException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/exception/DbException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/exception/NoGrouptoJoinException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/exception/NoGrouptoJoinException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/firebase/FirebaseDb.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/firebase/FirebaseDb.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/grouping/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/grouping/Group.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/grouping/GroupAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/grouping/GroupAdmin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/routeplanning/RouteHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/routeplanning/RouteHash.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/routeplanning/RoutePlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/routeplanning/RoutePlanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/twilio/twilio.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/twilio/twilio.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/util/Converter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/util/Converter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/comp30022/server/util/GeoHashing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/comp30022/server/util/GeoHashing.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -110,10 +119,13 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/Server.kt">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/Server.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
+            <state relative-caret-position="387">
+              <caret line="33" column="45" lean-forward="true" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
+              <folding>
+                <element signature="e#26#1308#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -128,10 +140,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/firebase/FirebaseDb.java">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/firebase/FirebaseDb.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-567">
-              <caret line="39" column="31" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
+            <state relative-caret-position="288">
+              <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -142,8 +154,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/comp30022/server/RoutePackageTests.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+            <state relative-caret-position="150">
+              <caret line="18" column="38" lean-forward="true" selection-start-line="17" selection-start-column="43" selection-end-line="18" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -151,8 +163,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/comp30022/server/GroupAdminTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="56" column="9" selection-start-line="56" selection-start-column="9" selection-end-line="56" selection-end-column="9" />
+            <state relative-caret-position="195">
+              <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -160,8 +172,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="33" column="41" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
+            <state relative-caret-position="480">
+              <caret line="32" column="55" lean-forward="true" selection-start-line="32" selection-start-column="55" selection-end-line="32" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -293,14 +305,14 @@
               <item name="COMP30022-IT-Project-Server" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="COMP30022ServerEngine" type="b2602c69:ProjectViewProjectNode" />
               <item name="COMP30022-IT-Project-Server" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="kotlin" type="462c0819:PsiDirectoryNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -355,7 +367,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539162480214" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539162660677" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/application.properties" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -432,10 +444,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="90699000" />
+    <option name="totallyTimeSpent" value="90809000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18192919" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -591,7 +604,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/twilio/twilio.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/twilio/twilio.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="10" selection-start-line="10" selection-end-line="10" />
@@ -612,21 +625,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/exception/DbException.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/exception/DbException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/exception/NoGrouptoJoinException.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/exception/NoGrouptoJoinException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/routeplanning/RoutePlanner.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/routeplanning/RoutePlanner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
           <caret line="25" column="47" lean-forward="true" selection-start-line="25" selection-start-column="47" selection-end-line="25" selection-end-column="47" />
@@ -636,7 +649,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/grouping/GroupAdmin.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/grouping/GroupAdmin.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
@@ -648,28 +661,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/util/GeoHashing.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/util/GeoHashing.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/util/Converter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/util/Converter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/Constant.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/Constant.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="91" selection-start-line="3" selection-start-column="91" selection-end-line="3" selection-end-column="91" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/grouping/Group.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/grouping/Group.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
@@ -679,17 +692,10 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/Comp30022ServerEngineApplication.java">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/routeplanning/RouteHash.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/routeplanning/RouteHash.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="41" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
         </state>
       </provider>
     </entry>
@@ -700,27 +706,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/firebase/FirebaseDb.java">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-567">
-          <caret line="39" column="31" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/comp30022/server/RoutePackageTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="480">
+          <caret line="32" column="55" lean-forward="true" selection-start-line="32" selection-start-column="55" selection-end-line="32" selection-end-column="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/comp30022/server/GroupAdminTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="56" column="9" selection-start-line="56" selection-start-column="9" selection-end-line="56" selection-end-column="9" />
+        <state relative-caret-position="195">
+          <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/comp30022/server/RoutePackageTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="18" column="38" lean-forward="true" selection-start-line="17" selection-start-column="43" selection-end-line="18" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/firebase/FirebaseDb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -731,10 +744,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/comp30022/server/Server.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/comp30022/server/Server.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
+        <state relative-caret-position="387">
+          <caret line="33" column="45" lean-forward="true" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
+          <folding>
+            <element signature="e#26#1308#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
