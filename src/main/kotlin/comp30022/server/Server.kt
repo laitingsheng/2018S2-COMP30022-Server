@@ -273,7 +273,7 @@ fun main(args: Array<String>) {
     // this is the credential for using on google cloud
     var credential = GoogleCredentials.getApplicationDefault();
 
-    if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
+    FirebaseApp.initializeApp(
         FirebaseOptions.Builder().setCredentials(credential).build()
     )
 
@@ -285,5 +285,5 @@ fun main(args: Array<String>) {
 
     Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     runApplication<Server>(*args)
-//    SpringApplication.run(Server::class.java, *args)
 }
+

@@ -1,7 +1,10 @@
 package comp30022.server.firebase;
 
 import com.google.api.core.ApiFuture;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import comp30022.server.exception.DbException;
 import comp30022.server.grouping.Group;
@@ -21,18 +24,18 @@ public class FirebaseDb {
     private Firestore db;
 
     public FirebaseDb() {
-        //        try {
-        //            //Comment this for deploy
-        //            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-        //            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-        //
-        //            //GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
-        //
-        //            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
-        //            FirebaseApp.initializeApp(options);
-        //        } catch (Exception e) {
-        //            LOGGER.log(Level.WARNING, e.toString(), e);
-        //        }
+        try {
+            //Comment this for deploy
+//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
+//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+
+            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+
+            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
+            FirebaseApp.initializeApp(options);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, e.toString(), e);
+        }
     }
 
     public void updateUser(String userId) {
