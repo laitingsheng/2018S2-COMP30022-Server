@@ -1,4 +1,4 @@
-package comp30022.server.Firebase;
+package comp30022.server.firebase;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;

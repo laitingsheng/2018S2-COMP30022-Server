@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
-import comp30022.server.Firebase.FirebaseDb;
+import comp30022.server.firebase.FirebaseDb;
 import comp30022.server.exception.NoGrouptoJoinException;
 import comp30022.server.grouping.GroupAdmin;
 import comp30022.server.routeplanning.RouteHash;

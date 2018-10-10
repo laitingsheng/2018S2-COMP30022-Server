@@ -5,7 +5,7 @@ import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
-import comp30022.server.util.GeoToLat;
+import comp30022.server.util.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ public class RoutePlanner {
 
         DirectionsResult result = DirectionsApi
             .newRequest(geoApiContext)
-            .origin(GeoToLat.getoToLatLng(origins[0]))
-            .destination(GeoToLat.getoToLatLng(destinations[0]))
+            .origin(Converter.geoToLatLng(origins[0]))
+            .destination(Converter.geoToLatLng(destinations[0]))
             .waypoints(wayPoints)
             .optimizeWaypoints(true)
             .await();
@@ -36,10 +36,10 @@ public class RoutePlanner {
     private LatLng[] combineWayPoints(GeoPoint[] origins, GeoPoint[] destinations) {
         List<LatLng> wayPoints = new ArrayList<>();
         for (GeoPoint o : origins) {
-            wayPoints.add(GeoToLat.getoToLatLng(o));
+            wayPoints.add(Converter.geoToLatLng(o));
         }
         for (GeoPoint d : destinations) {
-            wayPoints.add(GeoToLat.getoToLatLng(d));
+            wayPoints.add(Converter.geoToLatLng(d));
         }
 
         LatLng[] result = new LatLng[wayPoints.size()];
