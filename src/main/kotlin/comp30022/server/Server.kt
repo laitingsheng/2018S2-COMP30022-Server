@@ -23,28 +23,24 @@ import comp30022.server.routeplanning.RoutePlanner
 import comp30022.server.twilio.*
 import comp30022.server.util.Converter
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import java.util.Arrays
 import java.util.logging.Level
 import java.util.logging.Logger
 import javax.servlet.http.HttpServletResponse
 
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
-private lateinit var USERS: CollectionReference
-private lateinit var CALLING: CollectionReference
 
 private fun buildToken(grant: Grant, identity: String): AccessToken {
     return AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET).identity(identity).grant(grant)
         .build()
 }
 
-//@SpringBootApplication
 @RestController
-open class Server {
+class Server {
 
     private val geoApiContext = GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build()
     private val db = FirebaseDb()
@@ -257,32 +253,4 @@ open class Server {
          */
         return ResponseEntity.badRequest().body("Not Yet implemented")
     }
-}
-
-fun main(args: Array<String>) {
-    // this is the credential to use on local
-    //    var credential = GoogleCredentials.fromStream(
-    //        FileInputStream(
-    //            Paths.get(
-    //                ".", "src", "main", "resources", "firebase-admin-sdk.json"
-    //            ).toAbsolutePath().normalize().toString()
-    //        )
-    //    )
-
-    // this is the credential for using on google cloud
-    var credential = GoogleCredentials.getApplicationDefault();
-
-    if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
-        FirebaseOptions.Builder().setCredentials(credential).build()
-    )
-
-
-    FirestoreClient.getFirestore().run {
-        USERS = collection("users")
-        CALLING = collection("calling")
-    }
-
-    Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    //    runApplication<Server>(*args)
-    SpringApplication.run(Server::class.java, *args)
 }
