@@ -5,6 +5,8 @@ import com.google.cloud.firestore.CollectionReference
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
+import com.google.gson.GsonBuilder
+import com.google.maps.GeoApiContext
 import com.twilio.Twilio
 import com.twilio.jwt.accesstoken.AccessToken
 import com.twilio.jwt.accesstoken.ChatGrant
@@ -13,14 +15,22 @@ import com.twilio.jwt.accesstoken.VideoGrant
 import com.twilio.rest.notify.v1.service.Binding
 import com.twilio.rest.notify.v1.service.Notification
 import com.twilio.rest.video.v1.Room
+import comp30022.server.exception.NoGrouptoJoinException
+import comp30022.server.firebase.FirebaseDb
+import comp30022.server.grouping.GroupAdmin
+import comp30022.server.routeplanning.RouteHash
+import comp30022.server.routeplanning.RoutePlanner
 import comp30022.server.twilio.*
+import comp30022.server.util.Converter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import java.util.Arrays
 import java.util.logging.Level
 import java.util.logging.Logger
+import javax.servlet.http.HttpServletResponse
 
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
 private lateinit var USERS: CollectionReference
@@ -34,6 +44,10 @@ private fun buildToken(grant: Grant, identity: String): AccessToken {
 @SpringBootApplication
 @RestController
 open class Server {
+
+    private val geoApiContext = GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build()
+    private val db = FirebaseDb()
+
     @RequestMapping(value = ["/twilio/register"], method = [RequestMethod.POST])
     fun register(identity: String?, address: String?, tag: String?): String? {
         return try {
@@ -143,6 +157,98 @@ open class Server {
             LOGGER.log(Level.SEVERE, "invalid invitation notification", t)
             false
         }
+    }
+
+    /**
+     * Merge from Java
+     */
+    @GetMapping("/")
+    fun hello(): String {
+        return "Guys the server for GUGUGU is now running at version 10:12"
+    }
+
+    /*
+       {
+        "origins":[A,B,C,D,E]
+        "destinations":[A,B,C,D,E]
+       }
+     */
+    @RequestMapping(value = "/route", method = arrayOf(RequestMethod.POST))
+    fun routePlanning(@RequestBody pairs: Map<String, Array<String>>): ResponseEntity<*> {
+        val planner = RoutePlanner(geoApiContext)
+        try {
+            LOGGER.log(Level.INFO, pairs.toString())
+
+            // Sort the array first for hashing
+            Arrays.sort(pairs["origins"])
+            Arrays.sort(pairs["destinations"])
+
+            // Parse the array
+            val origins = Converter.parseGeoPoints(pairs["origins"])
+            val destinations = Converter.parseGeoPoints(pairs["destinations"])
+
+            // Get Hashing
+            val routeHashKey = RouteHash.hashOriginsDestinations(origins, destinations)
+
+            if (db.routeResultInDb(routeHashKey)) {
+                //fetch string from the db
+                val routeString = db.getRouteResult(routeHashKey)
+
+                return ResponseEntity.ok<String>(routeString!!)
+            } else {
+                //get result
+                val result = planner.getDirections(origins, destinations)
+                if (result.routes.size == 0) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No route avaiable")
+                }
+
+                //convert to string for storage
+                val objGson = GsonBuilder().setPrettyPrinting().create()
+                val routeString = objGson.toJson(result)
+
+                //upload string to db
+                db.updateRouteResult(routeHashKey, routeString)
+
+                return ResponseEntity.ok(routeString)
+            }
+        } catch (e: Exception) {
+            LOGGER.log(Level.WARNING, e.toString(), e)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<Any>(null)
+        }
+    }
+
+    @RequestMapping(value = "/group/joingroup", method = arrayOf(RequestMethod.POST))
+    fun searchGroupId(userId: String, destination: String, response: HttpServletResponse): String {
+        val groupControl = GroupAdmin()
+        val dest = Converter.parseGeoPoint(destination)
+
+        val userDocument = db.getUserLocationInfo(userId)
+
+        // Go Through All Group too see the matching
+        try {
+            // Case we can find a group
+            val groupId = groupControl.findNearestGroup(userId, userDocument, dest)
+            groupControl.addUserToGroup(groupId, userDocument, dest)
+            return groupId
+        } catch (e: NoGrouptoJoinException) {
+            // case we cannot find a group
+            return groupControl.createGroup(userId, userDocument, dest)
+        } catch (e: RuntimeException) {
+            response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            return "Error"
+        }
+    }
+
+    @RequestMapping(value = "/grouping", method = arrayOf(RequestMethod.POST))
+    fun grouping(user_id: String): ResponseEntity<*> {
+        /*
+            get this user's location
+
+            groupID = GroupUsers
+
+            return the groupID
+         */
+        return ResponseEntity.badRequest().body("Not Yet implemented")
     }
 }
 
