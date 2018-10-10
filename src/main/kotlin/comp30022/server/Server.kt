@@ -270,20 +270,28 @@ fun main(args: Array<String>) {
     //        )
     //    )
 
-    // this is the credential for using on google cloud
-    var credential = GoogleCredentials.getApplicationDefault();
+    LOGGER.log(Level.INFO, "before runApplication");
+    runApplication<Server>(*args){
+        // this is the credential for using on google cloud
+        LOGGER.log(Level.INFO, "before cretential");
+        var credential = GoogleCredentials.getApplicationDefault();
 
-    FirebaseApp.initializeApp(
-        FirebaseOptions.Builder().setCredentials(credential).build()
-    )
+        LOGGER.log(Level.INFO, "before firestore initialisation");
+        FirebaseApp.initializeApp(
+            FirebaseOptions.Builder().setCredentials(credential).build()
+        )
 
 
-    FirestoreClient.getFirestore().run {
-        USERS = collection("users")
-        CALLING = collection("calling")
+        LOGGER.log(Level.INFO, "get users and calling");
+        FirestoreClient.getFirestore().run {
+            USERS = collection("users")
+            CALLING = collection("calling")
+        }
+
+        LOGGER.log(Level.INFO, "twilio init");
+        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        LOGGER.log(Level.INFO, "init finish");
     }
-
-    Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    runApplication<Server>(*args)
+    LOGGER.log(Level.INFO, "after runApplication");
 }
 
