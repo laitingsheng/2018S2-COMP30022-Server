@@ -1,4 +1,4 @@
-package comp30022.server.firebase;
+package comp30022.server.Firebase;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -29,18 +29,18 @@ public class FirebaseDb {
     private Firestore db;
 
     public FirebaseDb() {
-        try {
-            //Comment this for deploy
-//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-
-            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
-
-            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
-            FirebaseApp.initializeApp(options);
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, e.toString(), e);
-        }
+        //        try {
+        //            //Comment this for deploy
+        //            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
+        //            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+        //
+        //            //GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+        //
+        //            FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
+        //            FirebaseApp.initializeApp(options);
+        //        } catch (Exception e) {
+        //            LOGGER.log(Level.WARNING, e.toString(), e);
+        //        }
     }
 
     public void updateUser(String userId) {
