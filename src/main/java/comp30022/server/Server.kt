@@ -8,9 +8,10 @@ import com.google.firebase.cloud.FirestoreClient
 import com.twilio.Twilio
 import com.twilio.jwt.accesstoken.AccessToken
 import com.twilio.jwt.accesstoken.ChatGrant
+import com.twilio.jwt.accesstoken.Grant
 import com.twilio.jwt.accesstoken.VideoGrant
-import com.twilio.rest.notify.v1.Credential
 import com.twilio.rest.notify.v1.service.Binding
+import com.twilio.rest.notify.v1.service.Notification
 import com.twilio.rest.video.v1.Room
 import comp30022.server.twilio.*
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -18,42 +19,74 @@ import org.springframework.boot.runApplication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import java.io.FileInputStream
-import java.nio.file.Paths
 import java.util.logging.Level
 import java.util.logging.Logger
 
 private val LOGGER: Logger = Logger.getLogger(Server::class.java.name)
 private lateinit var USERS: CollectionReference
 private lateinit var CALLING: CollectionReference
-private lateinit var FIREBASE_CREDENTIAL: Credential
+
+private fun buildToken(grant: Grant, identity: String): AccessToken {
+    return AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET).identity(identity).grant(grant)
+        .build()
+}
 
 @SpringBootApplication
 @RestController
 open class Server {
-    @RequestMapping(value = ["/twilio/token"], method = [RequestMethod.GET, RequestMethod.POST])
-    fun dispatchToken(type: String?, identity: String?, extra: String?): String? {
+    @RequestMapping(value = ["/twilio/register"], method = [RequestMethod.POST])
+    fun register(identity: String?, address: String?, tag: String?): String? {
+        return try {
+            if (identity!!.isEmpty() || address!!.isEmpty() || tag!!.isEmpty()) null else Binding.creator(
+                TWILIO_SERVICE_SID, identity, Binding.BindingType.FCM, address
+            ).setCredentialSid(TWILIO_FIREBASE_PUSH_CREDENTIAL).setTag(tag).create().sid
+        } catch (t: Throwable) {
+            LOGGER.log(Level.INFO, "Invalid request", t)
+            // any exceptions will return false represents invitation fail
+            null
+        }
+    }
+
+    @RequestMapping(value = ["/twilio/deregister"], method = [RequestMethod.POST])
+    fun deregister(sid: String?): Boolean {
+        return try {
+            Binding.deleter(TWILIO_SERVICE_SID, sid!!).delete()
+        } catch (e: Exception) {
+            LOGGER.log(Level.INFO, "Invalid request", e)
+            // any exceptions will return false represents invitation fail
+            false
+        }
+    }
+
+    @RequestMapping(value = ["/twilio/chat/token"], method = [RequestMethod.GET, RequestMethod.POST])
+    fun dispatchChatToken(identity: String?, extra: String?): String? {
         return try {
             // identity and extra should be non-null and non-empty
-            if (identity!!.isEmpty() || extra!!.isEmpty()) null else when (type) {
-                // generate chat grant
-                "chat" -> ChatGrant().setEndpointId("$TWILIO_APP_NAME:$identity:$extra").setPushCredentialSid(
+            if (identity!!.isEmpty() || extra!!.isEmpty()) null
+            else buildToken(
+                ChatGrant().setEndpointId("$TWILIO_APP_NAME:$identity:$extra").setPushCredentialSid(
                     TWILIO_FIREBASE_PUSH_CREDENTIAL
-                ).setServiceSid(TWILIO_CHAT_SERVICE_SID)
-                // generate video grant
-                "video" -> VideoGrant().setRoom(extra)
-                // throw an exception if type is not recognised
-                else -> throw AssertionError("invalid token type")
-            }.let {
-                // build the access token with the given non-null grant as well as the identity and convert it to JWT
-                // as the response
-                AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET).identity(identity).grant(it)
-                    .build().toJwt()
-            }
+                ).setServiceSid(TWILIO_CHAT_SERVICE_SID), identity
+            ).toJwt()
         } catch (t: Throwable) {
             LOGGER.log(Level.INFO, "invalid token request", t)
             // any exceptions will incur a response of null
             null
+        }
+    }
+
+    @RequestMapping(value = ["/twilio/chat/notify"], method = [RequestMethod.POST])
+    fun notifyMembers(guid: String?): Boolean {
+        return try {
+            if (guid!!.isEmpty()) false else {
+                // notify all members in a group for a new message
+                Notification.creator(TWILIO_SERVICE_SID).setTag(listOf("default", guid))
+                    .setPriority(Notification.Priority.LOW).create()
+                true
+            }
+        } catch (t: Throwable) {
+            LOGGER.log(Level.SEVERE, "invalid notification request", t)
+            false
         }
     }
 
@@ -84,68 +117,48 @@ open class Server {
         }
     }
 
-    @RequestMapping(value = ["/twilio/register"], method = [RequestMethod.POST])
-    fun register(identity: String?, address: String?, tag: String?): String? {
+    @RequestMapping(value = ["/twilio/call/token"], method = [RequestMethod.GET, RequestMethod.POST])
+    fun dispatchToken(identity: String?, extra: String?): String? {
         return try {
-            if (identity!!.isEmpty() || address!!.isEmpty()) null else Binding.creator(
-                TWILIO_SERVICE_SID, identity, Binding.BindingType.FCM, address
-            ).setCredentialSid(TWILIO_FIREBASE_PUSH_CREDENTIAL).setTag(tag ?: "default").create().sid
+            // identity and extra should be non-null and non-empty
+            if (identity!!.isEmpty() || extra!!.isEmpty()) null
+            else buildToken(VideoGrant().setRoom(extra), identity).toJwt()
         } catch (t: Throwable) {
-            LOGGER.log(Level.INFO, "Invalid request", t)
-            // any exceptions will return false represents invitation fail
+            LOGGER.log(Level.INFO, "invalid token request", t)
+            // any exceptions will incur a response of null
             null
         }
     }
 
-    @RequestMapping(value = ["/twilio/deregister"], method = [RequestMethod.POST])
-    fun deregister(sid: String?): Boolean {
+    @RequestMapping(value = ["twilio/call/invite"], method = [RequestMethod.POST])
+    fun invite(identity: String?, roomSID: String?): Boolean {
         return try {
-            Binding.deleter(TWILIO_SERVICE_SID, sid!!).delete()
-        } catch (e: Exception) {
-            LOGGER.log(Level.INFO, "Invalid request", e)
-            // any exceptions will return false represents invitation fail
+            if (identity!!.isEmpty() || roomSID!!.isEmpty()) false
+            else {
+                Notification.creator(TWILIO_SERVICE_SID).setIdentity(identity).setTag(listOf("default", "video"))
+                    .setBody(roomSID).setPriority(Notification.Priority.HIGH).create()
+                true
+            }
+        } catch (t: Throwable) {
+            LOGGER.log(Level.SEVERE, "invalid invitation notification", t)
             false
         }
-    }
-
-    @RequestMapping(value = ["/twilio/call", "twilio/call/invite"], method = [RequestMethod.POST])
-    fun invite(to: String?): Boolean {
-        return try {
-            // Notification.creator(TWILIO_SERVICE_SID).setIdentity(to!!).setPriority(Notification.Priority.HIGH)
-            // true
-            false
-        } catch (e: Exception) {
-            LOGGER.log(Level.INFO, "Invalid request", e)
-            // any exceptions will return false represents invitation fail
-            false
-        }
-    }
-
-    @RequestMapping(value = ["/twilio/room-status"], method = [RequestMethod.POST])
-    fun monitorRooms() {
     }
 }
 
 fun main(args: Array<String>) {
-
-    // this is the credential to use on local
-//    var credential = GoogleCredentials.fromStream(
-//        FileInputStream(
-//            Paths.get(
-//                ".", "src", "main", "resources", "firebase-admin-sdk.json"
-//            ).toAbsolutePath().normalize().toString()
-//        )
-//    )
-
-    // this is the credential for using on google cloud
-    var credential = GoogleCredentials.getApplicationDefault();
-
     if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
-        FirebaseOptions.Builder().setCredentials(credential).build()
+        FirebaseOptions.Builder().setCredentials(
+            GoogleCredentials.fromStream(
+                java.io.FileInputStream(
+                    java.nio.file.Paths.get(
+                        ".", "src", "main", "resources", "firebase-admin-sdk.json"
+                    ).toAbsolutePath().normalize().toString()
+                )
+            )
+            //            GoogleCredentials.getApplicationDefault()
+        ).build()
     )
-
-
-
 
     FirestoreClient.getFirestore().run {
         USERS = collection("users")
