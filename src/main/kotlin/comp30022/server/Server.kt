@@ -50,6 +50,28 @@ class Server: SpringBootServletInitializer() {
     private val geoApiContext = GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build()
     private val db = FirebaseDb()
 
+    init {
+        // this is the credential for using on google cloud
+        LOGGER.log(Level.INFO, "before cretential");
+        var credential = GoogleCredentials.getApplicationDefault();
+
+        LOGGER.log(Level.INFO, "before firestore initialisation");
+        if (FirebaseApp.getApps().size == 0) FirebaseApp.initializeApp(
+            FirebaseOptions.Builder().setCredentials(credential).build()
+        )
+
+
+        LOGGER.log(Level.INFO, "get users and calling");
+        FirestoreClient.getFirestore().run {
+            USERS = collection("users")
+            CALLING = collection("calling")
+        }
+
+        LOGGER.log(Level.INFO, "twilio init");
+        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        LOGGER.log(Level.INFO, "init finish");
+    }
+
     @RequestMapping(value = ["/twilio/register"], method = [RequestMethod.POST])
     fun register(identity: String?, address: String?, tag: String?): String? {
         return try {
@@ -256,7 +278,7 @@ class Server: SpringBootServletInitializer() {
 
             return the groupID
          */
-        return ResponseEntity.badRequest().body("Not Yet implemented")
+        return ResponseEntity.badRequest().body("Notl Yet implemented")
     }
 }
 
@@ -270,28 +292,6 @@ fun main(args: Array<String>) {
     //        )
     //    )
 
-    LOGGER.log(Level.INFO, "before runApplication");
-    runApplication<Server>(*args){
-        // this is the credential for using on google cloud
-        LOGGER.log(Level.INFO, "before cretential");
-        var credential = GoogleCredentials.getApplicationDefault();
-
-        LOGGER.log(Level.INFO, "before firestore initialisation");
-        FirebaseApp.initializeApp(
-            FirebaseOptions.Builder().setCredentials(credential).build()
-        )
-
-
-        LOGGER.log(Level.INFO, "get users and calling");
-        FirestoreClient.getFirestore().run {
-            USERS = collection("users")
-            CALLING = collection("calling")
-        }
-
-        LOGGER.log(Level.INFO, "twilio init");
-        Twilio.init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        LOGGER.log(Level.INFO, "init finish");
-    }
-    LOGGER.log(Level.INFO, "after runApplication");
+    runApplication<Server>(*args)
 }
 
