@@ -1,9 +1,11 @@
-package comp30022.server.RoutePlanning;
+package comp30022.server.routeplanning;
 
+import com.google.cloud.firestore.GeoPoint;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.LatLng;
+import comp30022.server.util.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,26 +20,26 @@ public class RoutePlanner {
         this.geoApiContext = geoApiContext;
     }
 
-    public DirectionsResult getDirections(LatLng[] origins, LatLng[] destinations) throws Exception {
+    public DirectionsResult getDirections(GeoPoint[] origins, GeoPoint[] destinations) throws Exception {
         LatLng[] wayPoints = combineWayPoints(origins, destinations);
 
         DirectionsResult result = DirectionsApi
             .newRequest(geoApiContext)
-            .origin(origins[0])
-            .destination(destinations[0])
+            .origin(Converter.geoToLatLng(origins[0]))
+            .destination(Converter.geoToLatLng(destinations[0]))
             .waypoints(wayPoints)
             .optimizeWaypoints(true)
             .await();
         return result;
     }
 
-    private LatLng[] combineWayPoints(LatLng[] origins, LatLng[] destinations) {
+    private LatLng[] combineWayPoints(GeoPoint[] origins, GeoPoint[] destinations) {
         List<LatLng> wayPoints = new ArrayList<>();
-        for (LatLng o : origins) {
-            wayPoints.add(o);
+        for (GeoPoint o : origins) {
+            wayPoints.add(Converter.geoToLatLng(o));
         }
-        for (LatLng d : destinations) {
-            wayPoints.add(d);
+        for (GeoPoint d : destinations) {
+            wayPoints.add(Converter.geoToLatLng(d));
         }
 
         LatLng[] result = new LatLng[wayPoints.size()];

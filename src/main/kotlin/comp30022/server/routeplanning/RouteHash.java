@@ -1,14 +1,11 @@
-package comp30022.server.RoutePlanning;
+package comp30022.server.routeplanning;
 
-import com.google.maps.model.LatLng;
+import com.google.cloud.firestore.GeoPoint;
 
 import java.util.Arrays;
 
 public class RouteHash {
-    public static int hashOriginsDestinations(LatLng[] origins, LatLng[] destinations) {
-        //Sort the array first for hashing
-        Arrays.sort(origins);
-        Arrays.sort(destinations);
+    public static int hashOriginsDestinations(GeoPoint[] origins, GeoPoint[] destinations) {
 
         //Create Hashing
         int originsHashCode = Arrays.deepHashCode(origins);
