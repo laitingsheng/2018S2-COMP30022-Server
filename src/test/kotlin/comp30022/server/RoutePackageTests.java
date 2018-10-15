@@ -1,12 +1,10 @@
 package comp30022.server;
 
 import com.google.cloud.firestore.GeoPoint;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsResult;
-import comp30022.server.RoutePlanning.RouteHash;
-import comp30022.server.RoutePlanning.RoutePlanner;
+import comp30022.server.routeplanning.RouteHash;
+import comp30022.server.routeplanning.RoutePlanner;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

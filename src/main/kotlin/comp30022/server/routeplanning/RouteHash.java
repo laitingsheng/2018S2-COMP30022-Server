@@ -1,4 +1,4 @@
-package comp30022.server.RoutePlanning;
+package comp30022.server.routeplanning;
 
 import com.google.cloud.firestore.GeoPoint;
 
