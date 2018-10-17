@@ -44,9 +44,12 @@ public class GroupAdmin {
             );
             groupRef.update("groupLocation", newGroupLocation);
 
-            //
+            // delete document
             membersCount = membersRef.get().getDocuments().size();
-
+            if (membersCount == 0) {
+                // case no one left, delete this group
+                groupRef.delete();
+            }
         } catch (Exception e){
             LOGGER.log(Level.WARNING, e.toString(), e);
             throw new RuntimeException("Error in quitting group");
