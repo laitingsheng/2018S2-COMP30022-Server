@@ -12,6 +12,7 @@ import com.twilio.jwt.accesstoken.AccessToken
 import com.twilio.jwt.accesstoken.ChatGrant
 import com.twilio.jwt.accesstoken.Grant
 import com.twilio.jwt.accesstoken.VideoGrant
+import com.twilio.rest.chat.v1.service.channel.Member
 import com.twilio.rest.notify.v1.service.Binding
 import com.twilio.rest.notify.v1.service.Notification
 import com.twilio.rest.video.v1.Room
@@ -309,6 +310,17 @@ class Server: SpringBootServletInitializer() {
         } catch (e: RuntimeException) {
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             return "Error"
+        }
+    }
+
+    @RequestMapping(value = ["/twilio/member/join"], method = [RequestMethod.POST])
+    fun memberJoin(channelSID: String?, identity: String?): String?
+    {
+        return try {
+            Member.creator(TWILIO_SERVICE_SID, channelSID!!, identity!!).create().sid
+        } catch (t: Throwable) {
+            LOGGER.log(Level.SEVERE, "member creation fail", t)
+            null
         }
     }
 }
