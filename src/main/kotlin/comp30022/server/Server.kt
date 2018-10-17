@@ -247,6 +247,34 @@ class Server: SpringBootServletInitializer() {
         }
     }
 
+    // Get All Member's location
+    @RequestMapping(value = ["/group/getmembers"], method = [RequestMethod.POST])
+    fun getMembers(groupId: String): List<Map<String, String>> {
+        val groupControl = GroupAdmin()
+        try {
+            var members = groupControl.getMembers(groupId);
+            return members;
+        } catch (e: RuntimeException) {
+            var members: List<Map<String, String>> = listOf(hashMapOf("error" to "error"))
+            return members
+        }
+    }
+
+    // Delete Group
+    @RequestMapping(value = ["/group/quitgroup"], method = [RequestMethod.POST])
+    fun quitGroup(userId: String, groupId: String, response: HttpServletResponse): String {
+        val groupControl = GroupAdmin()
+        val uerDocument = db.getUserLocationInfo(userId)
+        try{
+            groupControl.quitGroup(groupId, uerDocument)
+            return "Success"
+        } catch (e: RuntimeException) {
+            response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            return "Error"
+        }
+    }
+
+    // For join Group
     @RequestMapping(value = ["/group/joingroup"], method = [RequestMethod.POST])
     fun searchGroupId(userId: String, destination: String, response: HttpServletResponse): String {
         val groupControl = GroupAdmin()
@@ -269,16 +297,19 @@ class Server: SpringBootServletInitializer() {
         }
     }
 
-    @RequestMapping(value = ["/grouping"], method = [RequestMethod.POST])
-    fun grouping(user_id: String): ResponseEntity<*> {
-        /*
-            get this user's location
+    // For Creating group
+    @RequestMapping(value=["/group/creategroup"], method = [RequestMethod.POST])
+    fun createGroup(userId: String, destination: String, response: HttpServletResponse): String{
+        val groupControl = GroupAdmin()
+        val dest = Converter.parseGeoPoint(destination)
+        val userDocument = db.getUserLocationInfo(userId)
 
-            groupID = GroupUsers
-
-            return the groupID
-         */
-        return ResponseEntity.badRequest().body("Notl Yet implemented")
+        try {
+            return groupControl.createGroup(userId, userDocument, dest)
+        } catch (e: RuntimeException) {
+            response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            return "Error"
+        }
     }
 }
 

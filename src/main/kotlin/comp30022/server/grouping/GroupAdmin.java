@@ -9,6 +9,7 @@ import comp30022.server.firebase.FirebaseDb;
 import comp30022.server.util.GeoHashing;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,72 @@ public class GroupAdmin {
 
     public GroupAdmin() {
         db = new FirebaseDb();
+    }
+
+    public List<Map<String, String>> getMembers(String groupId){
+        Firestore db2 = FirestoreClient.getFirestore();
+        DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
+        ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
+
+        List<Map<String, String>> membersInfo = new ArrayList<Map<String, String>>();
+
+        try {
+            List<QueryDocumentSnapshot> members = membersRef.get().getDocuments();
+            for (DocumentSnapshot member : members) {
+                Map<String, String> newMember = new HashMap<String, String>();
+
+                String userId = member.getId();
+                GeoPoint userLocatiopn =
+                    db2.collection(FirebaseDb.USERLOCATIONDB).document(userId).get().get().getGeoPoint("location");
+
+                newMember.put("id", userId);
+                newMember.put("location", String.format("%f,%f", userLocatiopn.getLatitude(),
+                    userLocatiopn.getLongitude()));
+
+                membersInfo.add(newMember);
+            }
+            return membersInfo;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, e.toString(), e);
+            throw new RuntimeException("Error in getting all members");
+        }
+    }
+
+    public void quitGroup(String groupId, Map<String, Object> userDocument){
+        Firestore db2 = FirestoreClient.getFirestore();
+        DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
+        try {
+            ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
+            String memberId = (String)userDocument.get("id");
+
+            // Delete Memeber from the collection
+            groupRef.collection("members").document(memberId).delete();
+
+            // Update Group Location
+            int membersCount = membersRef.get().getDocuments().size();
+
+            // delete document
+            membersCount = membersRef.get().getDocuments().size();
+            if (membersCount == 0) {
+                // case no one left, delete this group
+                groupRef.delete();
+            } else {
+                GeoPoint userLocation = (GeoPoint)userDocument.get("location");
+                GeoPoint groupLocation = groupRef.get().get().getGeoPoint("groupLocation");
+
+                GeoPoint newGroupLocation = new GeoPoint(
+                    (groupLocation.getLatitude() * membersCount - userLocation.getLatitude()) / (membersCount - 1),
+                    (groupLocation.getLongitude() * membersCount - userLocation.getLongitude()) / (membersCount - 1)
+                );
+                groupRef.update("groupLocation", newGroupLocation);
+            }
+
+
+
+        } catch (Exception e){
+            LOGGER.log(Level.WARNING, e.toString(), e);
+            throw new RuntimeException("Error in quitting group");
+        }
     }
 
     /**
