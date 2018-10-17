@@ -24,6 +24,35 @@ public class GroupAdmin {
         db = new FirebaseDb();
     }
 
+    public void quitGroup(String groupId, Map<String, Object> userDocument){
+        Firestore db2 = FirestoreClient.getFirestore();
+        DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
+        try {
+            ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
+            String memberId = (String)userDocument.get("id");
+
+            // Delete Memeber from the collection
+            groupRef.collection("members").document(memberId).delete();
+
+            // Update Group Location
+            int membersCount = membersRef.get().getDocuments().size();
+            GeoPoint userLocation = (GeoPoint)userDocument.get("location");
+            GeoPoint groupLocation = groupRef.get().get().getGeoPoint("groupLocation");
+            GeoPoint newGroupLocation = new GeoPoint(
+                (groupLocation.getLatitude() * membersCount - userLocation.getLatitude()) / (membersCount - 1),
+                (groupLocation.getLongitude() * membersCount - userLocation.getLongitude()) / (membersCount - 1)
+            );
+            groupRef.update("groupLocation", newGroupLocation);
+
+            //
+            membersCount = membersRef.get().getDocuments().size();
+
+        } catch (Exception e){
+            LOGGER.log(Level.WARNING, e.toString(), e);
+            throw new RuntimeException("Error in quitting group");
+        }
+    }
+
     /**
      * @param userId
      *     id of the user
