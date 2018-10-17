@@ -247,6 +247,19 @@ class Server: SpringBootServletInitializer() {
         }
     }
 
+    // Get All Member's location
+    @RequestMapping(value = ["/group/getmembers"], method = [RequestMethod.POST])
+    fun getMembers(groupId: String): List<Map<String, String>> {
+        val groupControl = GroupAdmin()
+        try {
+            var members = groupControl.getMembers(groupId);
+            return members;
+        } catch (e: RuntimeException) {
+            var members: List<Map<String, String>> = listOf(hashMapOf("error" to "error"))
+            return members
+        }
+    }
+
     // Delete Group
     @RequestMapping(value = ["/group/quitgroup"], method = [RequestMethod.POST])
     fun quitGroup(userId: String, groupId: String, response: HttpServletResponse): String {
