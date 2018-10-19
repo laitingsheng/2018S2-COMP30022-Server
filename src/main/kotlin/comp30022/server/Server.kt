@@ -325,6 +325,17 @@ class Server: SpringBootServletInitializer() {
         }
     }
 
+    @RequestMapping(value = ["/twilio/channel/retrieve"], method = [RequestMethod.POST])
+    fun retrieveChannel(channelSid: String?): Channel?
+    {
+        return try {
+            Channel.fetcher(TWILIO_SERVICE_SID, channelSid).fetch();
+        } catch (t: Throwable) {
+            LOGGER.log(Level.SEVERE, "channel fetching fail", t)
+            null
+        }
+    }
+
     @RequestMapping(value = ["/twilio/member/join"], method = [RequestMethod.POST])
     fun memberJoin(channelSID: String?, identity: String?): String?
     {
@@ -349,4 +360,3 @@ fun main(args: Array<String>) {
 
     runApplication<Server>(*args)
 }
-
