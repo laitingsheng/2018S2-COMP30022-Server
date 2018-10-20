@@ -25,7 +25,7 @@ public class GroupAdmin {
         db = new FirebaseDb();
     }
 
-    public List<Map<String, String>> getMembers(String groupId){
+    public List<Map<String, String>> getMembers(String groupId) {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
         ApiFuture<QuerySnapshot> membersRef = groupRef.collection("members").get();
@@ -42,8 +42,10 @@ public class GroupAdmin {
                     db2.collection(FirebaseDb.USERLOCATIONDB).document(userId).get().get().getGeoPoint("location");
 
                 newMember.put("id", userId);
-                newMember.put("location", String.format("%f,%f", userLocatiopn.getLatitude(),
-                    userLocatiopn.getLongitude()));
+                newMember.put(
+                    "location",
+                    String.format("%f,%f", userLocatiopn.getLatitude(), userLocatiopn.getLongitude())
+                );
 
                 membersInfo.add(newMember);
             }
@@ -54,7 +56,7 @@ public class GroupAdmin {
         }
     }
 
-    public void quitGroup(String groupId, Map<String, Object> userDocument){
+    public void quitGroup(String groupId, Map<String, Object> userDocument) {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
         try {
@@ -82,10 +84,7 @@ public class GroupAdmin {
                 );
                 groupRef.update("groupLocation", newGroupLocation);
             }
-
-
-
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
             throw new RuntimeException("Error in quitting group");
         }

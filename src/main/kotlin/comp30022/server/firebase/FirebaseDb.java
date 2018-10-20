@@ -26,8 +26,8 @@ public class FirebaseDb {
     public FirebaseDb() {
         try {
             //Comment this for deploy
-//            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            //            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
+            //            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 

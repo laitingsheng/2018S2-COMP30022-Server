@@ -22,9 +22,7 @@ import comp30022.server.firebase.FirebaseDb
 import comp30022.server.grouping.GroupAdmin
 import comp30022.server.routeplanning.RouteHash
 import comp30022.server.routeplanning.RoutePlanner
-import comp30022.server.twilio.*
 import comp30022.server.util.Converter
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
@@ -41,13 +39,14 @@ private lateinit var USERS: CollectionReference
 private lateinit var CALLING: CollectionReference
 
 private fun buildToken(grant: Grant, identity: String): AccessToken {
-    return AccessToken.Builder(TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET).identity(identity).grant(grant)
-        .build()
+    return AccessToken.Builder(
+        TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET
+    ).identity(identity).grant(grant).build()
 }
 
 @SpringBootApplication
 @RestController
-class Server: SpringBootServletInitializer() {
+class Server : SpringBootServletInitializer() {
 
     private val geoApiContext = GeoApiContext.Builder().apiKey(Constant.GOOGLEMAPAPIKEY).build()
     private val db = FirebaseDb()
@@ -253,12 +252,12 @@ class Server: SpringBootServletInitializer() {
     @RequestMapping(value = ["/group/getmembers"], method = [RequestMethod.POST])
     fun getMembers(groupId: String): List<Map<String, String>> {
         val groupControl = GroupAdmin()
-        try {
-            var members = groupControl.getMembers(groupId);
-            return members;
+        return try {
+            val members = groupControl.getMembers(groupId)
+            members
         } catch (e: RuntimeException) {
             var members: List<Map<String, String>> = listOf(hashMapOf("error" to "error"))
-            return members
+            members
         }
     }
 
@@ -267,7 +266,7 @@ class Server: SpringBootServletInitializer() {
     fun quitGroup(userId: String, groupId: String, response: HttpServletResponse): String {
         val groupControl = GroupAdmin()
         val uerDocument = db.getUserLocationInfo(userId)
-        try{
+        try {
             groupControl.quitGroup(groupId, uerDocument)
             return "Success"
         } catch (e: RuntimeException) {
@@ -285,23 +284,23 @@ class Server: SpringBootServletInitializer() {
         val userDocument = db.getUserLocationInfo(userId)
 
         // Go Through All Group too see the matching
-        try {
+        return try {
             // Case we can find a group
             val groupId = groupControl.findNearestGroup(userId, userDocument, dest)
             groupControl.addUserToGroup(groupId, userDocument, dest)
-            return groupId
+            groupId
         } catch (e: NoGrouptoJoinException) {
             // case we cannot find a group
-            return groupControl.createGroup(userId, userDocument, dest)
+            groupControl.createGroup(userId, userDocument, dest)
         } catch (e: RuntimeException) {
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-            return "Error"
+            "Error"
         }
     }
 
     // For Creating group
-    @RequestMapping(value=["/group/creategroup"], method = [RequestMethod.POST])
-    fun createGroup(userId: String, destination: String, response: HttpServletResponse): String{
+    @RequestMapping(value = ["/group/creategroup"], method = [RequestMethod.POST])
+    fun createGroup(userId: String, destination: String, response: HttpServletResponse): String {
         val groupControl = GroupAdmin()
         val dest = Converter.parseGeoPoint(destination)
         val userDocument = db.getUserLocationInfo(userId)
@@ -315,8 +314,7 @@ class Server: SpringBootServletInitializer() {
     }
 
     @RequestMapping(value = ["/twilio/channel/create"], method = [RequestMethod.POST])
-    fun createChannel(identity: String?): String?
-    {
+    fun createChannel(identity: String?): String? {
         return try {
             Channel.creator(TWILIO_SERVICE_SID).setCreatedBy(identity).create().sid
         } catch (t: Throwable) {
@@ -326,10 +324,9 @@ class Server: SpringBootServletInitializer() {
     }
 
     @RequestMapping(value = ["/twilio/channel/retrieve"], method = [RequestMethod.POST])
-    fun retrieveChannel(channelSid: String?): Channel?
-    {
+    fun retrieveChannel(channelSid: String?): Channel? {
         return try {
-            Channel.fetcher(TWILIO_SERVICE_SID, channelSid).fetch();
+            Channel.fetcher(TWILIO_SERVICE_SID, channelSid!!).fetch()
         } catch (t: Throwable) {
             LOGGER.log(Level.SEVERE, "channel fetching fail", t)
             null
@@ -337,8 +334,7 @@ class Server: SpringBootServletInitializer() {
     }
 
     @RequestMapping(value = ["/twilio/member/join"], method = [RequestMethod.POST])
-    fun memberJoin(channelSID: String?, identity: String?): String?
-    {
+    fun memberJoin(channelSID: String?, identity: String?): String? {
         return try {
             Member.creator(TWILIO_SERVICE_SID, channelSID!!, identity!!).create().sid
         } catch (t: Throwable) {

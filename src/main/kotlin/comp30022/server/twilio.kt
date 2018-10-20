@@ -1,4 +1,4 @@
-package comp30022.server.twilio
+package comp30022.server
 
 const val TWILIO_APP_NAME: String = "GUGUGU"
 const val TWILIO_ACCOUNT_SID: String = "ACc564c5adcb834b833daff618d73d8a2e" // "AC4155cd01d9108bf19d16a102df42948c"
