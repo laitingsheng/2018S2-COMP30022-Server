@@ -67,10 +67,9 @@ public class GroupAdmin {
             groupRef.collection("members").document(memberId).delete();
 
             // Update Group Location
-            int membersCount = membersRef.get().getDocuments().size();
 
             // delete document
-            membersCount = membersRef.get().getDocuments().size();
+            int membersCount = membersRef.get().getDocuments().size();
             if (membersCount == 0) {
                 // case no one left, delete this group
                 groupRef.delete();
@@ -78,10 +77,19 @@ public class GroupAdmin {
                 GeoPoint userLocation = (GeoPoint)userDocument.get("location");
                 GeoPoint groupLocation = groupRef.get().get().getGeoPoint("groupLocation");
 
-                GeoPoint newGroupLocation = new GeoPoint(
-                    (groupLocation.getLatitude() * membersCount - userLocation.getLatitude()) / (membersCount - 1),
-                    (groupLocation.getLongitude() * membersCount - userLocation.getLongitude()) / (membersCount - 1)
-                );
+                GeoPoint newGroupLocation;
+                if (membersCount == 1){
+                    newGroupLocation = new GeoPoint(
+                        groupLocation.getLatitude() * membersCount - userLocation.getLatitude(),
+                        groupLocation.getLongitude() * membersCount - userLocation.getLongitude()
+                    );
+                } else {
+                    newGroupLocation = new GeoPoint(
+                        (groupLocation.getLatitude() * membersCount - userLocation.getLatitude()) / (membersCount - 1),
+                        (groupLocation.getLongitude() * membersCount - userLocation.getLongitude()) / (membersCount - 1)
+                    );
+                }
+
                 groupRef.update("groupLocation", newGroupLocation);
             }
         } catch (Exception e) {

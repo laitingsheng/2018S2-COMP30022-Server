@@ -255,7 +255,7 @@ class Server : SpringBootServletInitializer() {
         return try {
             val members = groupControl.getMembers(groupId)
             members
-        } catch (e: RuntimeException) {
+        } catch (e: Exception) {
             var members: List<Map<String, String>> = listOf(hashMapOf("error" to "error"))
             members
         }
@@ -269,7 +269,7 @@ class Server : SpringBootServletInitializer() {
         try {
             groupControl.quitGroup(groupId, uerDocument)
             return "Success"
-        } catch (e: RuntimeException) {
+        } catch (e: Exception) {
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             return "Error"
         }
@@ -292,7 +292,7 @@ class Server : SpringBootServletInitializer() {
         } catch (e: NoGrouptoJoinException) {
             // case we cannot find a group
             groupControl.createGroup(userId, userDocument, dest)
-        } catch (e: RuntimeException) {
+        } catch (e: Exception) {
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             "Error"
         }
@@ -307,7 +307,7 @@ class Server : SpringBootServletInitializer() {
 
         try {
             return groupControl.createGroup(userId, userDocument, dest)
-        } catch (e: RuntimeException) {
+        } catch (e: Exception) {
             response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
             return "Error"
         }
