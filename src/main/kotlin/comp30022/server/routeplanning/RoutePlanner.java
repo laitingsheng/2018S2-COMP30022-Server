@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Class for call google Direction's API to provide navigation result
+ */
 public class RoutePlanner {
 
     private static final Logger LOGGER = Logger.getLogger(RoutePlanner.class.getName());
@@ -21,6 +24,13 @@ public class RoutePlanner {
         this.geoApiContext = geoApiContext;
     }
 
+    /**
+     * Call Google Direction's API to get the navigation result
+     * @param origins Array of People's star position (GeoPoint)
+     * @param destinations Array of People's end position (GeoPoint)
+     * @return DirectionsResult, see google's document for detail of this class
+     * @throws Exception
+     */
     public DirectionsResult getDirections(GeoPoint[] origins, GeoPoint[] destinations) throws Exception {
         LatLng[] wayPoints = combineWayPoints(origins, destinations);
 
@@ -35,6 +45,13 @@ public class RoutePlanner {
         return result;
     }
 
+    /**
+     * Combine all people's origins and destination into waypoints, so that in navigation API google can optimise the
+     * route
+     * @param origins Array of People's star position (GeoPoint)
+     * @param destinations Array of People's end position (GeoPoint)
+     * @return A list of LatLng object that will be used for wayPOints in Google Direction's API
+     */
     private LatLng[] combineWayPoints(GeoPoint[] origins, GeoPoint[] destinations) {
         List<LatLng> wayPoints = new ArrayList<>();
         for (GeoPoint o : origins) {

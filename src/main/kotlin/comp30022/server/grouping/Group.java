@@ -9,6 +9,14 @@ public class Group {
     public final GeoPoint[] origins;
     public final GeoPoint[] destination;
 
+    /**
+     * The Group class used to pass information
+     * @param groupId
+     * @param groupLocation
+     * @param users
+     * @param origins
+     * @param destinations
+     */
     public Group(
         String groupId, GeoPoint groupLocation, String[] users, GeoPoint[] origins, GeoPoint[] destinations
     ) {

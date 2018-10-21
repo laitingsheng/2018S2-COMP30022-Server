@@ -16,15 +16,24 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Handles all the Grouping operation for our grouping feature
+ */
 public class GroupAdmin {
 
     private static final Logger LOGGER = Logger.getLogger(GroupAdmin.class.getName());
     private FirebaseDb db;
 
+
     public GroupAdmin() {
         db = new FirebaseDb();
     }
 
+    /**
+     * Get all the members in a group given groupId
+     * @param groupId
+     * @return List of hashMap represent user's information
+     */
     public List<Map<String, String>> getMembers(String groupId) {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
@@ -33,6 +42,7 @@ public class GroupAdmin {
         List<Map<String, String>> membersInfo = new ArrayList<Map<String, String>>();
 
         try {
+            // Get all the member's information
             List<QueryDocumentSnapshot> members = membersRef.get().getDocuments();
             for (DocumentSnapshot member : members) {
                 Map<String, String> newMember = new HashMap<String, String>();
@@ -41,12 +51,14 @@ public class GroupAdmin {
                 GeoPoint userLocatiopn =
                     db2.collection(FirebaseDb.USERLOCATIONDB).document(userId).get().get().getGeoPoint("location");
 
+                // put them into the hashmap
                 newMember.put("id", userId);
                 newMember.put(
                     "location",
                     String.format("%f,%f", userLocatiopn.getLatitude(), userLocatiopn.getLongitude())
                 );
 
+                // adding to the result list
                 membersInfo.add(newMember);
             }
             return membersInfo;
@@ -56,6 +68,11 @@ public class GroupAdmin {
         }
     }
 
+    /**
+     * Giben groupId and User's document information, handle user's action to quit group
+     * @param groupId id of the group user want to quit
+     * @param userDocument A Map object represent user's information
+     */
     public void quitGroup(String groupId, Map<String, Object> userDocument) {
         Firestore db2 = FirestoreClient.getFirestore();
         DocumentReference groupRef = db2.collection(FirebaseDb.GROUPINFO).document(groupId);
@@ -66,7 +83,6 @@ public class GroupAdmin {
             // Delete Memeber from the collection
             groupRef.collection("members").document(memberId).delete();
 
-            // Update Group Location
 
             // delete document
             int membersCount = membersRef.get().getDocuments().size();
@@ -74,6 +90,8 @@ public class GroupAdmin {
                 // case no one left, delete this group
                 groupRef.delete();
             } else {
+
+                // Update Group Location
                 GeoPoint userLocation = (GeoPoint)userDocument.get("location");
                 GeoPoint groupLocation = groupRef.get().get().getGeoPoint("groupLocation");
 
@@ -89,7 +107,6 @@ public class GroupAdmin {
                         (groupLocation.getLongitude() * membersCount - userLocation.getLongitude()) / (membersCount - 1)
                     );
                 }
-
                 groupRef.update("groupLocation", newGroupLocation);
             }
         } catch (Exception e) {

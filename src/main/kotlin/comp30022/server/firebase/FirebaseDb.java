@@ -23,12 +23,11 @@ public class FirebaseDb {
     private static final Logger LOGGER = Logger.getLogger(FirebaseDb.class.getName());
     private Firestore db;
 
+    /**
+     * Get the firebase instance when this class is initialized
+     */
     public FirebaseDb() {
         try {
-            //Comment this for deploy
-            //            InputStream serviceAccount = new FileInputStream(Constant.FIREBASEADMINKEYPATH);
-            //            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
-
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
             FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
@@ -40,18 +39,11 @@ public class FirebaseDb {
         }
     }
 
-    public void updateUser(String userId) {
-        /*
-        1. get old user location from user-location database
-        2. delete user from location-user database
-        3. update new user location to userlocation database
-        4. update new user location to location-user database
-         */
-    }
-    /*
-    function relates to route result
+    /**
+     * Get the user's location from userToLocation database on CloudFirestore
+     * @param userId: user's uuid
+     * @return: Hashmap that contains all user's realtime information
      */
-
     public Map<String, Object> getUserLocationInfo(String userId) {
         db = FirestoreClient.getFirestore();
         DocumentReference docRef = db.collection(USERLOCATIONDB).document(userId);
@@ -69,6 +61,11 @@ public class FirebaseDb {
         }
     }
 
+    /**
+     * Given a hashKey, create by the route
+     * @param hashKey: int, the hashkey of route
+     * @return: the cached JSON response from Google in JSON String
+     */
     public String getRouteResult(int hashKey) {
         db = FirestoreClient.getFirestore();
 
@@ -91,8 +88,12 @@ public class FirebaseDb {
         }
     }
 
+    /**
+     * cache the result to firebase
+     * @param hashKey: the hash key
+     * @param routeResult: JSONString response from Google Direction's API
+     */
     public void updateRouteResult(int hashKey, String routeResult) {
-
         //upload to db
         db = FirestoreClient.getFirestore();
         Map<String, Object> docData = new HashMap<>();
@@ -100,6 +101,12 @@ public class FirebaseDb {
         ApiFuture<WriteResult> future = db.collection(ROUTEHASHDB).document(Integer.toString(hashKey)).set(docData);
     }
 
+    /**
+     * Function to check wheher route result has been cached.
+     * If cached, call getRouteResult to return the cache resullt
+     * @param hashKey: the hash value of route request for navigation
+     * @return: boolen, indicate whether route result has been cached.
+     */
     public boolean routeResultInDb(int hashKey) {
         db = FirestoreClient.getFirestore();
 
@@ -120,6 +127,10 @@ public class FirebaseDb {
         }
     }
 
+    /**
+     * Get All groups from the firebase
+     * @return List of QueryDocumentSnapshot
+     */
     public List<QueryDocumentSnapshot> getAllGroups() {
         db = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = db.collection(GROUPINFO).get();
@@ -130,9 +141,5 @@ public class FirebaseDb {
             LOGGER.log(Level.INFO, e.toString(), e);
             throw new DbException("Error in getAllGroups");
         }
-    }
-
-    public void createGroup(Group group) {
-
     }
 }
