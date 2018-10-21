@@ -203,6 +203,7 @@ public class GroupAdmin {
         // create for field
         Map<String, Object> group = new HashMap<>();
         group.put("groupLocation", userDocument.get("location"));
+        group.put("channelId", "null");
 
         // Create the Group document
         // update to database
