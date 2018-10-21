@@ -356,3 +356,4 @@ fun main(args: Array<String>) {
 
     runApplication<Server>(*args)
 }
+

@@ -46,12 +46,11 @@ public class GroupAdminTest {
     @Test
     public void addUserToGroupTest(){
         String userId = "testUserUUID2";
-
         GroupAdmin control = new GroupAdmin();
         Map<String, Object> user = new HashMap<>();
         user.put("location", UNIMELB);
         user.put("id", userId);
-        String groupId = "Pg4NoHnCfH7KHpDUJ2Pg";
+        String groupId = "testGroup";
         control.addUserToGroup(groupId, user, RMIT);
 
     }

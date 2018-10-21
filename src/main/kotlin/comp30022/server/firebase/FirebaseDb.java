@@ -32,7 +32,9 @@ public class FirebaseDb {
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
             FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(credentials).build();
-            FirebaseApp.initializeApp(options);
+            if (FirebaseApp.getApps().size() == 0) {
+                FirebaseApp.initializeApp(options);
+            }
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, e.toString(), e);
         }
